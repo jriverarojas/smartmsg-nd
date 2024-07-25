@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { RedisModule } from './redis/redis.module';
-import { UserModule } from './user/user.module';
-import { RedisService } from './redis/redis.service';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
+import { AuthModule } from './auth/auth.module'
+import { MessengerModule } from './messenger/messenger.module'
+import { TransactionInterceptor } from './common/transaction.decorator';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -24,14 +24,25 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
         database: configService.get('DATABASE_NAME'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
+        logging:false,
+        timezone: 'Z', // This forces UTC
+        ssl: {
+          rejectUnauthorized: false,
+        },
       }),
       inject: [ConfigService],
     }),
-    UserModule,
-    RedisModule,
+    AuthModule,
+    MessengerModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransactionInterceptor,
+    },
+  ],
 })
 export class AppModule {}
 

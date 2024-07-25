@@ -8,22 +8,28 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   const serviceType = configService.get<string>('SERVICE_TYPE');
+  
 
-  if (serviceType === 'worker') {
+  //if (serviceType === 'worker') {
+    const redisHost = configService.get<string>('REDIS_HOST');
+    const redisPort = configService.get<number>('REDIS_PORT');
+    const redisPassword = configService.get<string>('REDIS_PASSWORD')
     app.connectMicroservice<MicroserviceOptions>({
       transport: Transport.REDIS,
       options: {
-        url: `redis://${configService.get('REDIS_HOST')}:${configService.get('REDIS_PORT')}`,
+        host: redisHost,
+        port: redisPort,
+        password: redisPassword
       },
     });
 
-    await app.startAllMicroservicesAsync();
+    await app.startAllMicroservices();
     console.log('Worker is listening');
-  } else {
+  //} else {
     const port = configService.get<number>('APP_PORT') || 3000;
     await app.listen(port);
     console.log(`Application is running on: ${await app.getUrl()}`);
-  }
+  //}
 }
 
 bootstrap();
