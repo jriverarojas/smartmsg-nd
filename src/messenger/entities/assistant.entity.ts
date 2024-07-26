@@ -19,7 +19,7 @@ export class Assistant {
   working: string; // 'Y' or 'N'
 
   @OneToOne(() => User, { nullable: true })
-  @JoinColumn()
+  @JoinColumn({ name: 'userId' })
   user: User;
 
   @ManyToMany(() => Category, category => category.assistants)
@@ -32,4 +32,7 @@ export class Assistant {
 
   @OneToMany(() => Message, message => message.assistant)
   messages: Message[];
+
+  @Column()
+  userId: number;
 }

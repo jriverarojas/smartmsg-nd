@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, CreateDateColumn, UpdateDateColumn, JoinColumn } from 'typeorm';
 import { Channel } from './channel.entity';
 import { Thread } from './thread.entity';
 
@@ -14,6 +14,7 @@ export class Instance {
   externalId: string;
 
   @ManyToOne(() => Channel, channel => channel.instances)
+  @JoinColumn({ name: 'channelId' })
   channel: Channel;
 
   @OneToMany(() => Thread, thread => thread.instance)
@@ -24,4 +25,7 @@ export class Instance {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column()
+  channelId: number;
 }

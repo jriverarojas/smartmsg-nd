@@ -23,6 +23,7 @@ export class Thread {
   channel: Channel;
 
   @ManyToOne(() => Category, category => category.threads, { nullable: true })
+  @JoinColumn({ name: 'categoryId' }) 
   category: Category;
 
   @OneToMany(() => Message, message => message.thread)
@@ -37,4 +38,7 @@ export class Thread {
 
   @Column()
   instanceId: number; // This should match the join column name
+
+  @Column()
+  categoryId: number;
 }

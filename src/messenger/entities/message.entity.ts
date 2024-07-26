@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { Assistant } from './assistant.entity';
 import { Thread } from './thread.entity';
 
@@ -26,8 +26,16 @@ export class Message {
   type: string; // 'incoming' | 'outgoing'
 
   @ManyToOne(() => Assistant, assistant => assistant.messages)
+  @JoinColumn({ name: 'assistantId' })
   assistant: Assistant;
 
   @ManyToOne(() => Thread, thread => thread.messages)
+  @JoinColumn({ name: 'threadId' })
   thread: Thread;
+
+  @Column()
+  assistantId: number;
+
+  @Column()
+  threadId: number;
 }
