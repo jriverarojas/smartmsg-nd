@@ -35,6 +35,7 @@ export class WaapiService {
     try {
       await validateOrReject(dto);
     } catch (errors) {
+      console.log(errors);
       throw new BadRequestException(errors);
     }
   }
