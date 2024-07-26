@@ -33,8 +33,8 @@ export class Message {
   @JoinColumn({ name: 'threadId' })
   thread: Thread;
 
-  @Column()
-  assistantId: number;
+  @Column({ nullable: true })
+  assistantId?: number;
 
   @Column()
   threadId: number;
