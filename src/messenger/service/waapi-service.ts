@@ -1,12 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, MoreThan, Repository } from 'typeorm';
 import axios from 'axios';
 import { Instance } from '../entities/instance.entity';
 import { Thread } from '../entities/thread.entity';
 import { Message } from '../entities/message.entity';
-//import { Transaction } from '../common/transaction.decorator';
-//import { QueryRunner } from 'typeorm';
+import { validateOrReject } from 'class-validator';
+import { plainToInstance } from 'class-transformer';
+import { OutgoingMessageDto } from '../dto/waapi/outgoing-message.dto';
+import { IncomingMessageDto } from '../dto/waapi/incoming-message.dto';
 
 @Injectable()
 export class WaapiService {
@@ -18,48 +20,24 @@ export class WaapiService {
   ) {}
 
   async execute(config: any, taskPayload: any): Promise<void> {
-    
-
     if (taskPayload.type === 'out') {
-      this.validateOutgoing(taskPayload, config);
+      const outgoingMessageDto = plainToInstance(OutgoingMessageDto, { ...taskPayload, sendUrl: config.sendUrl, apiKey: config.apiKey });
+      await this.validateDto(outgoingMessageDto);
       await this.handleOutgoingMessage(config, taskPayload);
     } else {
-      this.validateIncoming(taskPayload, config);
+      const incomingMessageDto = plainToInstance(IncomingMessageDto, taskPayload);
+      await this.validateDto(incomingMessageDto);
       await this.handleIncomingMessage(config, taskPayload);
     }
   }
 
-  private validateOutgoing(taskPayload: any, config: any): void {
-    if (typeof taskPayload.toFrom !== 'string' ||
-        typeof taskPayload.message !== 'string' ||
-        typeof taskPayload.instance !== 'string' ||
-        !['out'].includes(taskPayload.type) ||
-        !this.isValidUrl(config.sendUrl) ||
-        typeof config.apiKey !== 'string') {
-      throw new Error('Invalid task payload or config');
-    }
-  }
-
-  private validateIncoming(taskPayload: any, config: any): void {
-    if (typeof taskPayload.data.message.from !== 'string' ||
-        typeof taskPayload.data.message.to !== 'string' ||
-        typeof taskPayload.data.message.body !== 'string' ||
-        typeof taskPayload.instance !== 'string' ||
-        !['in'].includes(taskPayload.type) 
-        ) {
-      throw new Error('Invalid task payload or config');
-    }
-  }
-
-  private isValidUrl(url: string): boolean {
+  private async validateDto(dto: any): Promise<void> {
     try {
-      new URL(url);
-      return true;
-    } catch {
-      return false;
+      await validateOrReject(dto);
+    } catch (errors) {
+      throw new BadRequestException(errors);
     }
   }
-
   private async handleOutgoingMessage(config: any, taskPayload: any): Promise<void> {
     const queryRunner = this.dataSource.createQueryRunner();
 
@@ -97,8 +75,6 @@ export class WaapiService {
           expirationDate: MoreThan(now),
         },
       });
-      console.log(thread);
-
 
       if (thread) {
         thread.expirationDate = new Date(now.getTime() + 30 * 60000);
@@ -146,8 +122,7 @@ export class WaapiService {
       if (!instance) {
         throw new Error(`Instance with ID ${taskPayload.instance} not found`);
       }
-      console.log('INCOMING');
-
+      
       const now = new Date(new Date().toISOString());
       let thread = await queryRunner.manager.findOne(Thread, {
         where: {
@@ -176,7 +151,7 @@ export class WaapiService {
         //runId: taskPayload.runId,
         status: 'done',
         queueId: taskPayload.id,
-        type: 'outgoing',
+        type: 'incoming',
       });
       await queryRunner.manager.save(message);
 
