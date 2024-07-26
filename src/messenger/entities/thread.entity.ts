@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany, JoinColumn } from 'typeorm';
 import { Channel } from './channel.entity';
 import { Category } from './category.entity';
 import { Message } from './message.entity';
@@ -32,5 +32,9 @@ export class Thread {
   assistants: Assistant[];
 
   @ManyToOne(() => Instance, instance => instance.threads)
+  @JoinColumn({ name: 'instanceId' }) // This ensures the join column is named 'instanceId'
   instance: Instance;
+
+  @Column()
+  instanceId: number; // This should match the join column name
 }

@@ -91,7 +91,7 @@ export class WaapiService {
         await queryRunner.manager.save(thread);
       } else {
         thread = queryRunner.manager.create(Thread, {
-          instance: instance,
+          instanceId: instance.id,
           externalInstance: taskPayload.toFrom,
           expirationDate: new Date(now.getTime() + 30 * 60000),
         });
