@@ -39,6 +39,6 @@ export class Thread {
   @Column()
   instanceId: number; // This should match the join column name
 
-  @Column()
-  categoryId: number;
+  @Column({ nullable: true })
+  categoryId?: number;
 }
