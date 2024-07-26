@@ -79,7 +79,7 @@ export class WaapiService {
       const now = new Date(new Date().toISOString());
       let thread = await queryRunner.manager.findOne(Thread, {
         where: {
-          instance: instance,
+          instanceId: instance.id,
           externalInstance: taskPayload.toFrom,
           expirationDate: MoreThan(now),
         },
@@ -91,7 +91,7 @@ export class WaapiService {
         await queryRunner.manager.save(thread);
       } else {
         thread = queryRunner.manager.create(Thread, {
-          instanceId: instance.id,
+          instance: instance,
           externalInstance: taskPayload.toFrom,
           expirationDate: new Date(now.getTime() + 30 * 60000),
         });
