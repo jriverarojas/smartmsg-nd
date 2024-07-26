@@ -9,7 +9,7 @@ export class QueueController {
   constructor(private readonly redisService: RedisService) {}
 
   @Post(':type/:channel/:instance')
-  @PermissionsRedis()
+  //@PermissionsRedis()
   async enqueue(
     @Param('type') type: string,
     @Param('channel') channel: string,
