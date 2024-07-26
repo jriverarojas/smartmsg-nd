@@ -116,7 +116,7 @@ export class WaapiService {
         thread: thread,
         message: taskPayload.message,
         dateCreated: new Date(),
-        //runId: taskPayload.runId,
+        runId: taskPayload.runId,
         status: 'done',
         queueId: taskPayload.id,
         type: 'outgoing',
@@ -169,7 +169,16 @@ export class WaapiService {
         await queryRunner.manager.save(thread);
       }
       
-      //await queryRunner.manager.save(message);
+      const message = queryRunner.manager.create(Message, {
+        thread: thread,
+        message: taskPayload.message,
+        dateCreated: new Date(),
+        //runId: taskPayload.runId,
+        status: 'done',
+        queueId: taskPayload.id,
+        type: 'outgoing',
+      });
+      await queryRunner.manager.save(message);
 
       await queryRunner.commitTransaction();
     } catch (error) {
