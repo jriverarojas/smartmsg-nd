@@ -171,7 +171,7 @@ export class WaapiService {
       
       const message = queryRunner.manager.create(Message, {
         thread: thread,
-        message: taskPayload.message,
+        message: taskPayload.data.message.body,
         dateCreated: new Date(),
         //runId: taskPayload.runId,
         status: 'done',
