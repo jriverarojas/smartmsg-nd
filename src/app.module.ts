@@ -24,7 +24,7 @@ import { TransactionInterceptor } from './common/transaction.decorator';
         database: configService.get('DATABASE_NAME'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
-        logging:false,
+        logging:true,
         timezone: 'Z', // This forces UTC
         ssl: {
           rejectUnauthorized: false,

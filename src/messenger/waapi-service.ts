@@ -84,6 +84,7 @@ export class WaapiService {
           expirationDate: MoreThan(now),
         },
       });
+      console.log(thread);
 
 
       if (thread) {
