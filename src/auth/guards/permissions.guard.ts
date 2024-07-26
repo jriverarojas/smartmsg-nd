@@ -2,7 +2,7 @@ import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { PERMISSIONS_KEY } from '../decorators/permissions.decorator';
-import { UserService } from '../user.service'
+import { UserService } from '../service/user.service'
 import { Role } from '../entities/role.entity';
 
 @Injectable()

@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Body, Put, Param, Delete, UseGuards } from '@nestjs/common';
-import { ChannelService } from './channel.service';
-import { CreateChannelDto } from './dto/create-channel.dto';
-import { UpdateChannelDto } from './dto/update-channel.dto';
-import { Channel } from './entities/channel.entity';
-import { Permissions } from '../auth/decorators/permissions.decorator';
-import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { ChannelService } from '../service/channel.service';
+import { CreateChannelDto } from '../dto/create-channel.dto';
+import { UpdateChannelDto } from '../dto/update-channel.dto';
+import { Channel } from '../entities/channel.entity';
+import { Permissions } from '../../auth/decorators/permissions.decorator';
+import { PermissionsGuard } from '../../auth/guards/permissions.guard';
 
 @Controller('channels')
 @UseGuards(PermissionsGuard)

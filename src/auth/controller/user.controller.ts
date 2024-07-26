@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Body, Put, Param, Delete, UseGuards } from '@nestjs/common';
-import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdatePasswordDto } from './dto/update-password.dto';
-import { User } from './entities/user.entity';
-import { Permissions } from '../auth/decorators/permissions.decorator';
-import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { UserService } from '../service/user.service';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { UpdatePasswordDto } from '../dto/update-password.dto';
+import { User } from '../entities/user.entity';
+import { Permissions } from '../decorators/permissions.decorator';
+import { PermissionsGuard } from '../guards/permissions.guard';
 
 @Controller('user')
 @UseGuards(PermissionsGuard)

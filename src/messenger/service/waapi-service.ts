@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, MoreThan, Repository } from 'typeorm';
 import axios from 'axios';
-import { Instance } from './entities/instance.entity';
-import { Thread } from './entities/thread.entity';
-import { Message } from './entities/message.entity';
+import { Instance } from '../entities/instance.entity';
+import { Thread } from '../entities/thread.entity';
+import { Message } from '../entities/message.entity';
 //import { Transaction } from '../common/transaction.decorator';
 //import { QueryRunner } from 'typeorm';
 
@@ -18,22 +18,35 @@ export class WaapiService {
   ) {}
 
   async execute(config: any, taskPayload: any): Promise<void> {
-    this.validate(taskPayload, config);
+    
 
     if (taskPayload.type === 'out') {
+      this.validateOutgoing(taskPayload, config);
       await this.handleOutgoingMessage(config, taskPayload);
     } else {
+      this.validateIncoming(taskPayload, config);
       await this.handleIncomingMessage(config, taskPayload);
     }
   }
 
-  private validate(taskPayload: any, config: any): void {
+  private validateOutgoing(taskPayload: any, config: any): void {
     if (typeof taskPayload.toFrom !== 'string' ||
         typeof taskPayload.message !== 'string' ||
         typeof taskPayload.instance !== 'string' ||
-        !['in', 'out'].includes(taskPayload.type) ||
+        !['out'].includes(taskPayload.type) ||
         !this.isValidUrl(config.sendUrl) ||
         typeof config.apiKey !== 'string') {
+      throw new Error('Invalid task payload or config');
+    }
+  }
+
+  private validateIncoming(taskPayload: any, config: any): void {
+    if (typeof taskPayload.data.message.from !== 'string' ||
+        typeof taskPayload.data.message.to !== 'string' ||
+        typeof taskPayload.data.message.body !== 'string' ||
+        typeof taskPayload.instance !== 'string' ||
+        !['in'].includes(taskPayload.type) 
+        ) {
       throw new Error('Invalid task payload or config');
     }
   }
@@ -103,7 +116,7 @@ export class WaapiService {
         thread: thread,
         message: taskPayload.message,
         dateCreated: new Date(),
-        runId: taskPayload.runId,
+        //runId: taskPayload.runId,
         status: 'done',
         queueId: taskPayload.id,
         type: 'outgoing',
@@ -120,17 +133,41 @@ export class WaapiService {
   }
 
   private async handleIncomingMessage(config: any, taskPayload: any): Promise<void> {
+
+    const instanceNumber = taskPayload.data.message.to.split('@')[0];
+    const from = taskPayload.data.message.from.split('@')[0];
     const queryRunner = this.dataSource.createQueryRunner();
 
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
-      const instance = await queryRunner.manager.findOne(Instance, { where: { id: taskPayload.instance } });
+      const instance = await queryRunner.manager.findOne(Instance, { where: { number: instanceNumber } });
       if (!instance) {
         throw new Error(`Instance with ID ${taskPayload.instance} not found`);
       }
       console.log('INCOMING');
+
+      const now = new Date(new Date().toISOString());
+      let thread = await queryRunner.manager.findOne(Thread, {
+        where: {
+          instanceId: instance.id,
+          externalInstance: from,
+          expirationDate: MoreThan(now),
+        },
+      });
+
+      if (thread) {
+        thread.expirationDate = new Date(now.getTime() + 30 * 60000);
+        await queryRunner.manager.save(thread);
+      } else {
+        thread = queryRunner.manager.create(Thread, {
+          instance: instance,
+          externalInstance: from,
+          expirationDate: new Date(now.getTime() + 30 * 60000),
+        });
+        await queryRunner.manager.save(thread);
+      }
       
       //await queryRunner.manager.save(message);
 

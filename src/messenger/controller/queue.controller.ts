@@ -1,5 +1,5 @@
 import { Controller, Post, Body, HttpException, HttpStatus, Get, UseGuards, Param } from '@nestjs/common';
-import { RedisService } from '../redis/redis.service';
+import { RedisService } from '../../redis/redis.service';
 import { PermissionsRedis } from 'src/auth/decorators/permissions-redis.decorator';
 import { PermissionsRedisGuard } from 'src/auth/guards/permissions-redis.guard';
 

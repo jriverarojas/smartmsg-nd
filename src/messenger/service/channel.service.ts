@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateChannelDto } from './dto/create-channel.dto';
-import { UpdateChannelDto } from './dto/update-channel.dto';
-import { Channel } from './entities/channel.entity';
-import { EncryptionService } from 'src/auth/encryption.service';
+import { CreateChannelDto } from '../dto/create-channel.dto';
+import { UpdateChannelDto } from '../dto/update-channel.dto';
+import { Channel } from '../entities/channel.entity';
+import { EncryptionService } from 'src/auth/service/encryption.service';
 
 
 @Injectable()

@@ -2,18 +2,18 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { UserService } from './user.service';
-import { AuthService } from './auth.service';
+import { UserService } from './service/user.service';
+import { AuthService } from './service/auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
-import { UserController } from './user.controller';
+import { UserController } from './controller/user.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './entities/user.entity';
-import { AuthController } from './auth.controller';
+import { AuthController } from './controller/auth.controller';
 import { Role } from './entities/role.entity';
 import { Permission } from './entities/permission.entity';
 import { RedisModule } from 'src/redis/redis.module';
-import { EncryptionService } from './encryption.service';
+import { EncryptionService } from './service/encryption.service';
 
 @Module({
   imports: [

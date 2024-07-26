@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { RedisService } from '../redis/redis.service';
+import { RedisService } from '../../redis/redis.service';
 import { QueueService } from './queue.service';
 
 @Injectable()

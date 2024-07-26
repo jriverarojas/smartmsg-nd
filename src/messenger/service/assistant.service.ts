@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Assistant } from './entities/assistant.entity';
-import { UserService } from '../auth/user.service';
-import { CreateAssistantDto } from './dto/create-assistant.dto';
-import { UpdateAssistantDto } from './dto/update-assistant.dto';
+import { Assistant } from '../entities/assistant.entity';
+import { UserService } from '../../auth/service/user.service';
+import { CreateAssistantDto } from '../dto/create-assistant.dto';
+import { UpdateAssistantDto } from '../dto/update-assistant.dto';
 
 @Injectable()
 export class AssistantService {

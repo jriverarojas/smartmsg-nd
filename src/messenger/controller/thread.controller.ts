@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
-import { ThreadService } from './thread.service';
-import { CreateThreadDto } from './dto/create-thread.dto';
-import { UpdateThreadDto } from './dto/update-thread.dto';
-import { Thread } from './entities/thread.entity';
+import { ThreadService } from '../service/thread.service';
+import { CreateThreadDto } from '../dto/create-thread.dto';
+import { UpdateThreadDto } from '../dto/update-thread.dto';
+import { Thread } from '../entities/thread.entity';
 
 @Controller('threads')
 export class ThreadController {

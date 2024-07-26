@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
-import { AssistantService } from './assistant.service';
-import { CreateAssistantDto } from './dto/create-assistant.dto';
-import { UpdateAssistantDto } from './dto/update-assistant.dto';
-import { Assistant } from './entities/assistant.entity';
+import { AssistantService } from '../service/assistant.service';
+import { CreateAssistantDto } from '../dto/create-assistant.dto';
+import { UpdateAssistantDto } from '../dto/update-assistant.dto';
+import { Assistant } from '../entities/assistant.entity';
 
 @Controller('assistants')
 export class AssistantController {

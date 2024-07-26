@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Thread } from './entities/thread.entity';
-import { CreateThreadDto } from './dto/create-thread.dto';
-import { UpdateThreadDto } from './dto/update-thread.dto';
+import { Thread } from '../entities/thread.entity';
+import { CreateThreadDto } from '../dto/create-thread.dto';
+import { UpdateThreadDto } from '../dto/update-thread.dto';
 
 @Injectable()
 export class ThreadService {

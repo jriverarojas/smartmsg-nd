@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Queue } from './entities/queue.entity';
-import { Channel } from './entities/channel.entity';
+import { Queue } from '../entities/queue.entity';
+import { Channel } from '../entities/channel.entity';
 import { WaapiService } from './waapi-service';
-import { EncryptionService } from '../auth/encryption.service';
+import { EncryptionService } from '../../auth/service/encryption.service';
 
 @Injectable()
 export class QueueService {
