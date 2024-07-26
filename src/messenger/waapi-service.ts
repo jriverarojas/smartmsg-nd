@@ -23,7 +23,7 @@ export class WaapiService {
     if (taskPayload.type === 'out') {
       await this.handleOutgoingMessage(config, taskPayload);
     } else {
-      // Handle other types if necessary
+      await this.handleIncomingMessage(config, taskPayload);
     }
   }
 
@@ -109,6 +109,30 @@ export class WaapiService {
         type: 'outgoing',
       });
       await queryRunner.manager.save(message);
+
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  private async handleIncomingMessage(config: any, taskPayload: any): Promise<void> {
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const instance = await queryRunner.manager.findOne(Instance, { where: { id: taskPayload.instance } });
+      if (!instance) {
+        throw new Error(`Instance with ID ${taskPayload.instance} not found`);
+      }
+      console.log('INCOMING');
+      
+      //await queryRunner.manager.save(message);
 
       await queryRunner.commitTransaction();
     } catch (error) {
