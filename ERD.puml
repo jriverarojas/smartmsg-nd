@@ -1,0 +1,132 @@
+@startuml
+
+entity Log {
+  * id: number (PK)
+  --
+  method: string
+  url: string
+  body: json
+  status: number
+  duration: number
+  createdAt: Date
+}
+
+entity User {
+  * id: number (PK)
+  --
+  name: string
+  email: string
+  password: string
+  isApiUser: boolean
+  active: boolean
+  apiKey: string
+  apiKeyLastDigits: string
+  apiKeyExpiration: Date
+}
+
+entity Role {
+  * id: number (PK)
+  --
+  name: string
+}
+
+entity Permission {
+  * id: number (PK)
+  --
+  name: string
+}
+
+entity Assistant {
+  * id: number (PK)
+  --
+  type: string
+  active: boolean
+  working: string
+  userId: number
+}
+
+entity Category {
+  * id: number (PK)
+  --
+  code: string
+  name: string
+  parentId: number
+}
+
+entity Channel {
+  * id: number (PK)
+  --
+  code: string
+  service: string
+  config: string
+  expiresIn: number
+  name: string
+}
+
+entity Instance {
+  * id: number (PK)
+  --
+  number: string
+  externalId: string
+  channelId: number
+  createdAt: Date
+  updatedAt: Date
+}
+
+entity Message {
+  * id: number (PK)
+  --
+  message: string
+  dateCreated: Date
+  status: string
+  queueId: string
+  type: string
+  assistantId: number
+  threadId: number
+}
+
+entity Queue {
+  * id: number (PK)
+  --
+  payload: any
+  status: string
+  redisId: string
+  errorReason: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+entity Thread {
+  * id: number (PK)
+  --
+  externalInstance: string
+  expirationDate: Date
+  channelId: number
+  categoryId: number
+  instanceId: number
+}
+
+entity UserRole {
+  * userId: number (FK)
+  * roleId: number (FK)
+}
+
+entity RolePermission {
+  * roleId: number (FK)
+  * permissionId: number (FK)
+}
+
+User -- UserRole : "userId"  // Muchos a Muchos
+Role -- UserRole : "roleId"  // Muchos a Muchos
+Role -- RolePermission : "roleId"  // Uno a Muchos
+Permission -- RolePermission : "permissionId"  // Uno a Muchos
+Assistant }|--|{ User : "userId"  // Muchos a Uno
+Category }|--|{ Category : "parentId"  // Muchos a Uno (Recursivo)
+Instance }|--|| Channel : "channelId"  // Muchos a Uno
+Message }|--|| Assistant : "assistantId"  // Muchos a Uno
+Message }|--|| Thread : "threadId"  // Muchos a Uno
+Thread }|--|| Channel : "channelId"  // Muchos a Uno
+Thread }|--|| Category : "categoryId"  // Muchos a Uno
+Thread }|--|| Instance : "instanceId"  // Muchos a Uno
+
+@enduml
