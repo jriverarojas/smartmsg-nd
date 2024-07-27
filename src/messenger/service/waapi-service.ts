@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Instance } from '../entities/instance.entity';
 import { Thread } from '../entities/thread.entity';
 import { Message } from '../entities/message.entity';
-import { validateOrReject } from 'class-validator';
+import { validateOrReject, ValidationOptions } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { OutgoingMessageDto } from '../dto/waapi/outgoing-message.dto';
 import { IncomingMessageDto } from '../dto/waapi/incoming-message.dto';
@@ -32,11 +32,16 @@ export class WaapiService {
     }
   }
 
+  
+
   private async validateDto(dto: any): Promise<void> {
+    // Define the options for validation
+    
     try {
-      await validateOrReject(dto);
+      await validateOrReject(dto, validatorOptions);
     } catch (errors) {
-      console.log(errors);
+      //console.log(errors);
+      console.dir(errors, { depth: null, colors: true });
       throw new BadRequestException(errors);
     }
   }
