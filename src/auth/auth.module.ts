@@ -33,7 +33,14 @@ import { Log } from './entities/log.entity';
     RedisModule,
   ],
    
-  providers: [UserService, AuthService, LocalStrategy, JwtStrategy, EncryptionService, LogService],
+  providers: [  
+    UserService, 
+    AuthService, 
+    LocalStrategy, 
+    JwtStrategy, 
+    EncryptionService, 
+    LogService,
+  ],
   controllers: [UserController, AuthController],
   exports: [UserService, JwtModule, TypeOrmModule, EncryptionService, LogService],
 

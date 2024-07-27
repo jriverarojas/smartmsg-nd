@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module'
 import { MessengerModule } from './messenger/messenger.module'
 import { TransactionInterceptor } from './common/transaction.decorator';
+import { LoggingInterceptor } from './common/interceptos/logging.interceptor';
 
 @Module({
   imports: [
@@ -42,6 +43,10 @@ import { TransactionInterceptor } from './common/transaction.decorator';
     {
       provide: APP_INTERCEPTOR,
       useClass: TransactionInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
     },
   ],
 })
