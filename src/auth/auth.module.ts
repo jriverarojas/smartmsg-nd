@@ -14,10 +14,12 @@ import { Role } from './entities/role.entity';
 import { Permission } from './entities/permission.entity';
 import { RedisModule } from 'src/redis/redis.module';
 import { EncryptionService } from './service/encryption.service';
+import { LogService } from './service/log.service';
+import { Log } from './entities/log.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Role, Permission]),
+    TypeOrmModule.forFeature([User, Role, Permission, Log]),
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -31,9 +33,9 @@ import { EncryptionService } from './service/encryption.service';
     RedisModule,
   ],
    
-  providers: [UserService, AuthService, LocalStrategy, JwtStrategy, EncryptionService],
+  providers: [UserService, AuthService, LocalStrategy, JwtStrategy, EncryptionService, LogService],
   controllers: [UserController, AuthController],
-  exports: [UserService, JwtModule, TypeOrmModule, EncryptionService],
+  exports: [UserService, JwtModule, TypeOrmModule, EncryptionService, LogService],
 
 })
 export class AuthModule {}
