@@ -20,6 +20,7 @@ export class WorkerService implements OnModuleInit, OnModuleDestroy {
   }
 
   async startProcessing() {
+    console.log('Worker is listening');
     while (this.isRunning) {
       const task = await this.redisService.consumeFromQueue();
       if (task) {

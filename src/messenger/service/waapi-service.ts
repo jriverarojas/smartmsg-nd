@@ -25,6 +25,7 @@ export class WaapiService {
       await this.validateDto(outgoingMessageDto);
       await this.handleOutgoingMessage(config, taskPayload);
     } else {
+      console.log(taskPayload);
       const incomingMessageDto = plainToInstance(IncomingMessageDto, taskPayload);
       await this.validateDto(incomingMessageDto);
       await this.handleIncomingMessage(config, taskPayload);
