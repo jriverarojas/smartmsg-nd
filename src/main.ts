@@ -3,9 +3,29 @@ import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
+import { ValidationPipe, BadRequestException } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true,
+    exceptionFactory: (errors) => {
+      const detailedErrors = errors.map(error => ({
+        property: error.property,
+        value: error.value,
+        constraints: error.constraints,
+        children: error.children ? error.children.map(child => ({
+          property: child.property,
+          value: child.value,
+          constraints: child.constraints,
+        })) : [],
+      }));
+      return new BadRequestException(detailedErrors);
+    }
+  }));
   const configService = app.get(ConfigService);
 
   // Use global exception filter
