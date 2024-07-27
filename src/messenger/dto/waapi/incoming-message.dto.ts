@@ -1,28 +1,31 @@
-// src/dto/incoming-message.dto.ts
-import { IsIn, IsString, ValidateNested } from 'class-validator';
+import { IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class MessageData {
   @IsString()
-  from: string;
-
-  @IsString()
   to: string;
 
   @IsString()
+  from: string;
+
+  @IsString()
   body: string;
+
+  @IsString()
+  instance: string;
+}
+
+class Data {
+  @ValidateNested()
+  @Type(() => MessageData)
+  message: MessageData;
 }
 
 export class IncomingMessageDto {
   @IsString()
-  instance: string;
-
-  @IsIn(['in'])
-  type: string;
+  id: string;
 
   @ValidateNested()
-  @Type(() => MessageData)
-  data: {
-    message: MessageData;
-  };
+  @Type(() => Data)
+  data: Data;
 }
