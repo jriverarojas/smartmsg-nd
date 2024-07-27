@@ -38,7 +38,7 @@ export class WaapiService {
     // Define the options for validation
     
     try {
-      await validateOrReject(dto, validatorOptions);
+      await validateOrReject(dto);
     } catch (errors) {
       //console.log(errors);
       console.dir(errors, { depth: null, colors: true });
