@@ -25,7 +25,6 @@ export class WaapiService {
       await this.validateDto(outgoingMessageDto);
       await this.handleOutgoingMessage(config, taskPayload);
     } else {
-      console.log(taskPayload);
       const incomingMessageDto = plainToInstance(IncomingMessageDto, taskPayload);
       await this.validateDto(incomingMessageDto);
       await this.handleIncomingMessage(config, taskPayload);
@@ -40,7 +39,6 @@ export class WaapiService {
     try {
       await validateOrReject(dto);
     } catch (errors) {
-      //console.log(errors);
       console.dir(errors, { depth: null, colors: true });
       throw new BadRequestException(errors);
     }
