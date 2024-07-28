@@ -12,7 +12,7 @@ export class AssistantService {
   [x: string]: any;
   constructor(
     @InjectRepository(Assistant) private readonly assistantRepository: Repository<Assistant>,
-    @InjectRepository(InstanceAssistant) private readonly InstanceAssistantRepository: Repository<InstanceAssistant>,
+    @InjectRepository(InstanceAssistant) private readonly instanceAssistantRepository: Repository<InstanceAssistant>,
     private readonly usersService: UserService,
   ) {}
 
