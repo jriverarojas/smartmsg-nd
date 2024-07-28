@@ -153,7 +153,7 @@ export class WaapiService {
           message: 'No tenemos agentes para atenderte en este momento, porfavor intenta mas tarde', 
           type: 'out',
           channel: 'waapi',
-          instance: instance.id,
+          instance: `${instance.id}`,
         });
 
         thread = queryRunner.manager.create(Thread, {
