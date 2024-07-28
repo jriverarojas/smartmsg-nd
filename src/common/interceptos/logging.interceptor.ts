@@ -9,7 +9,6 @@ export class LoggingInterceptor implements NestInterceptor {
   constructor(private readonly logService: LogService) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    console.log('##################');
     const request = context.switchToHttp().getRequest<Request>();
     const response = context.switchToHttp().getResponse<Response>();
     const { method, url, body } = request;

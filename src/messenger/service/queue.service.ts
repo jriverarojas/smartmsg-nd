@@ -36,7 +36,6 @@ export class QueueService {
     const decryptedConfig = this.encryptionService.decrypt(channel.config);
     try {
       // Dynamically load and call the service
-      console.log(task);
       await this.execute(channel.service, JSON.parse(decryptedConfig), task);
     } catch(error) {
       //console.log(error);
