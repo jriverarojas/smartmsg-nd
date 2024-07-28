@@ -3,7 +3,7 @@ import { Type } from 'class-transformer';
 
 class MessageId {
   @IsString()
-  fromMe: string;
+  fromMe: boolean;
 
   @IsString()
   remote: string;
