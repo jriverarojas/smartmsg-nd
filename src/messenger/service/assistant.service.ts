@@ -11,10 +11,9 @@ import { InstanceAssistant } from '../entities/instance-assistant.entity';
 export class AssistantService {
   [x: string]: any;
   constructor(
-    @InjectRepository(Assistant)
-    private readonly assistantRepository: Repository<Assistant>,
+    @InjectRepository(Assistant) private readonly assistantRepository: Repository<Assistant>,
+    @InjectRepository(InstanceAssistant) private readonly InstanceAssistantRepository: Repository<InstanceAssistant>,
     private readonly usersService: UserService,
-    private readonly instanceAssistantRepository: Repository<InstanceAssistant>,
   ) {}
 
   async create(createAssistantDto: CreateAssistantDto): Promise<Assistant> {
