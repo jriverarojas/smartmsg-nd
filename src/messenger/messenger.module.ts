@@ -27,10 +27,11 @@ import { Instance } from './entities/instance.entity';
 import { Queue } from './entities/queue.entity';
 import { QueueService } from './service/queue.service';
 import { WaapiService } from './service/waapi-service';
+import { InstanceAssistant } from './entities/instance-assistant.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Channel, Thread, Category, Message, Assistant,Instance, Queue]),
+    TypeOrmModule.forFeature([Channel, Thread, Category, Message, Assistant,Instance, Queue, InstanceAssistant]),
     AuthModule,
     RedisModule,
     ConfigModule,
