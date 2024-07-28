@@ -2,7 +2,7 @@ import { IsString, ValidateNested, IsNumber, IsBoolean, IsArray, IsOptional, IsO
 import { Type } from 'class-transformer';
 
 class MessageId {
-  @IsString()
+  @IsBoolean()
   fromMe: boolean;
 
   @IsString()
