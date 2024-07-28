@@ -3,6 +3,7 @@ import { User } from '../../auth/entities/user.entity';
 import { Category } from './category.entity';
 import { Thread } from './thread.entity';
 import { Message } from './message.entity';
+import { InstanceAssistant } from './instance-assistant.entity';
 
 @Entity()
 export class Assistant {
@@ -32,6 +33,9 @@ export class Assistant {
 
   @OneToMany(() => Message, message => message.assistant)
   messages: Message[];
+
+  @OneToMany(() => InstanceAssistant, instanceAssistant => instanceAssistant.assistant)
+  instanceAssistants: InstanceAssistant[];
 
   @Column()
   userId: number;

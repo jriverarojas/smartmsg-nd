@@ -5,13 +5,16 @@ import { Assistant } from '../entities/assistant.entity';
 import { UserService } from '../../auth/service/user.service';
 import { CreateAssistantDto } from '../dto/create-assistant.dto';
 import { UpdateAssistantDto } from '../dto/update-assistant.dto';
+import { InstanceAssistant } from '../entities/instance-assistant.entity';
 
 @Injectable()
 export class AssistantService {
+  [x: string]: any;
   constructor(
     @InjectRepository(Assistant)
     private readonly assistantRepository: Repository<Assistant>,
     private readonly usersService: UserService,
+    private readonly instanceAssistantRepository: Repository<InstanceAssistant>,
   ) {}
 
   async create(createAssistantDto: CreateAssistantDto): Promise<Assistant> {
@@ -44,6 +47,33 @@ export class AssistantService {
     Object.assign(assistant, updateAssistantDto);
 
     return this.assistantRepository.save(assistant);
+  }
+
+  private async getDefaultAssistant(instanceId: number): Promise<Assistant | undefined> {
+    const instanceAssistant = await this.instanceAssistantRepository.findOne({
+      where: { instanceId, isDefault: true },
+      relations: ['assistant'],
+    });
+
+    return instanceAssistant ? instanceAssistant.assistant : undefined;
+  }
+
+  async getAssistant(instanceId: number, categoryId: number | null): Promise<Assistant | undefined> {
+    if (categoryId === null || categoryId === undefined) {
+      return this.getDefaultAssistant(instanceId);
+    }
+
+    const assistant = await this.assistantRepository.createQueryBuilder('assistant')
+      .innerJoin('assistant.instanceAssistants', 'instanceAssistant', 'instanceAssistant.instanceId = :instanceId', { instanceId })
+      .where('assistant.categoryId = :categoryId', { categoryId })
+      .andWhere('assistant.working = :working', { working: 'Y' })
+      .getOne();
+
+    if (assistant) {
+      return assistant;
+    }
+
+    return this.getDefaultAssistant(instanceId);
   }
 
   async remove(id: number): Promise<void> {

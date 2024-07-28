@@ -9,6 +9,8 @@ import { validateOrReject, ValidationOptions } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { OutgoingMessageDto } from '../dto/waapi/outgoing-message.dto';
 import { IncomingMessageDto } from '../dto/waapi/incoming-message.dto';
+import { AssistantService } from './assistant.service';
+import { RedisService } from 'src/redis/redis.service';
 
 @Injectable()
 export class WaapiService {
@@ -16,7 +18,9 @@ export class WaapiService {
     @InjectRepository(Instance) private readonly instanceRepository: Repository<Instance>,
     @InjectRepository(Thread) private readonly threadRepository: Repository<Thread>,
     @InjectRepository(Message) private readonly messageRepository: Repository<Message>,
-    private readonly dataSource: DataSource
+    private readonly dataSource: DataSource,
+    private readonly assistantService: AssistantService,
+    private readonly redisService: RedisService,
   ) {}
 
   async execute(config: any, taskPayload: any): Promise<void> {
@@ -136,14 +140,26 @@ export class WaapiService {
           expirationDate: MoreThan(now),
         },
       });
-
+      let assistant;
       if (thread) {
+        
         thread.expirationDate = new Date(now.getTime() + 30 * 60000);
         await queryRunner.manager.save(thread);
       } else {
+        assistant = this.assistantService.getAssistant(instance.id, null);
+
+        const queueId = await this.redisService.addToQueue({
+          toFrom: from,
+          message: 'No tenemos agentes para atenderte en este momento, porfavor intenta mas tarde', 
+          type: 'out',
+          channel: 'waapi',
+          instance: instance.id,
+        });
+
         thread = queryRunner.manager.create(Thread, {
           instance: instance,
           externalInstance: from,
+          assistants:[assistant],
           expirationDate: new Date(now.getTime() + 30 * 60000),
         });
         await queryRunner.manager.save(thread);
