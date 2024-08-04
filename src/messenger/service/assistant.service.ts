@@ -21,12 +21,13 @@ export class AssistantService {
   async create(createAssistantDto: CreateAssistantDto): Promise<Assistant> {
     createAssistantDto.config = this.encryptionService.encrypt(createAssistantDto.config);
     const assistant = this.assistantRepository.create(createAssistantDto);
+    console.log('llega1');
     
     if (createAssistantDto.userId) {
       const user = await this.usersService.findOne(createAssistantDto.userId);
       assistant.user = user;
     }
-
+    console.log('llega2');
     return this.assistantRepository.save(assistant);
   }
 
