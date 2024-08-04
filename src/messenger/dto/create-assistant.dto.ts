@@ -12,6 +12,9 @@ export class CreateAssistantDto {
   @IsNotEmpty()
   working: string;
 
+  @IsString()
+  config: string;
+
   @IsOptional()
   userId?: number;
 

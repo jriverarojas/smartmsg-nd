@@ -17,7 +17,13 @@ export class Assistant {
   active: boolean;
 
   @Column()
+  isAutomatic: boolean;
+
+  @Column()
   working: string; // 'Y' or 'N'
+
+  @Column({ type: 'text', nullable: true })
+  config: string;
 
   @OneToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'userId' })

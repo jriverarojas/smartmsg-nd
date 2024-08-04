@@ -6,19 +6,22 @@ import { UserService } from '../../auth/service/user.service';
 import { CreateAssistantDto } from '../dto/create-assistant.dto';
 import { UpdateAssistantDto } from '../dto/update-assistant.dto';
 import { InstanceAssistant } from '../entities/instance-assistant.entity';
+import { EncryptionService } from 'src/auth/service/encryption.service';
 
 @Injectable()
 export class AssistantService {
-  [x: string]: any;
+  //x: string]: any;
   constructor(
     @InjectRepository(Assistant) private readonly assistantRepository: Repository<Assistant>,
     @InjectRepository(InstanceAssistant) private readonly instanceAssistantRepository: Repository<InstanceAssistant>,
+    private readonly encryptionService: EncryptionService,
     private readonly usersService: UserService,
   ) {}
 
   async create(createAssistantDto: CreateAssistantDto): Promise<Assistant> {
+    createAssistantDto.config = this.encryptionService.encrypt(createAssistantDto.config);
     const assistant = this.assistantRepository.create(createAssistantDto);
-
+    
     if (createAssistantDto.userId) {
       const user = await this.usersService.findOne(createAssistantDto.userId);
       assistant.user = user;
