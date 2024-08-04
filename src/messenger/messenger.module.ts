@@ -28,6 +28,8 @@ import { Queue } from './entities/queue.entity';
 import { QueueService } from './service/queue.service';
 import { WaapiService } from './service/waapi.service';
 import { InstanceAssistant } from './entities/instance-assistant.entity';
+import { AutomaticService } from './service/automatic.service';
+import { OpenaiService } from './service/openai.service';
 
 @Module({
   imports: [
@@ -37,6 +39,18 @@ import { InstanceAssistant } from './entities/instance-assistant.entity';
     ConfigModule,
   ],
   controllers: [ChannelController, CategoryController, ThreadController, MessageController, AssistantController, QueueController],
-  providers: [ChannelService, CategoryService, ThreadService, MessageService, AssistantService, RedisService, WorkerService, QueueService, WaapiService],
+  providers: [
+    ChannelService, 
+    CategoryService, 
+    ThreadService, 
+    MessageService, 
+    AssistantService, 
+    RedisService, 
+    WorkerService, 
+    QueueService, 
+    WaapiService,
+    AutomaticService,
+    OpenaiService,
+  ],
 })
 export class MessengerModule {}
