@@ -27,7 +27,7 @@ export class Assistant {
 
   @OneToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'userId' })
-  user: User;
+  user?: User;
 
   @ManyToMany(() => Category, category => category.assistants)
   @JoinTable()
@@ -43,6 +43,6 @@ export class Assistant {
   @OneToMany(() => InstanceAssistant, instanceAssistant => instanceAssistant.assistant)
   instanceAssistants: InstanceAssistant[];
 
-  @Column()
-  userId: number;
+  @Column({ nullable: true })
+  userId?: number;
 }
