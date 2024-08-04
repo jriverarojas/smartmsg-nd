@@ -35,7 +35,9 @@ export class ChannelService {
 
   async update(id: number, updateChannelDto: UpdateChannelDto): Promise<Channel> {
     const channel = await this.findOne(id);
-    updateChannelDto.config = this.encryptionService.encrypt(updateChannelDto.config);
+    if (updateChannelDto.config) {
+      updateChannelDto.config = this.encryptionService.encrypt(updateChannelDto.config);
+    }
     Object.assign(channel, updateChannelDto);
     return this.channelRepository.save(channel);
   }

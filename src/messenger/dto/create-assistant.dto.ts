@@ -8,6 +8,9 @@ export class CreateAssistantDto {
   @IsBoolean()
   active: boolean;
 
+  @IsBoolean()
+  isAutomatic: boolean;
+
   @IsString()
   @IsNotEmpty()
   working: string;

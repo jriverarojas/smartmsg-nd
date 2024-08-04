@@ -9,12 +9,20 @@ export class UpdateAssistantDto {
   @IsOptional()
   active?: boolean;
 
+  @IsBoolean()
+  @IsOptional()
+  isAutomatic: boolean;
+
   @IsString()
   @IsOptional()
   working?: string;
 
   @IsOptional()
   userId?: number;
+
+  @IsString()
+  @IsOptional()
+  config: string;
 
   @IsOptional()
   categoryIds?: number[];

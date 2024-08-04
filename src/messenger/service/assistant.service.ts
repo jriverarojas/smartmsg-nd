@@ -41,6 +41,10 @@ export class AssistantService {
   async update(id: number, updateAssistantDto: UpdateAssistantDto): Promise<Assistant> {
     const assistant = await this.findOne(id);
 
+    if (updateAssistantDto.config) {
+      updateAssistantDto.config = this.encryptionService.encrypt(updateAssistantDto.config);
+    }
+
     if (updateAssistantDto.userId) {
       const user = await this.usersService.findOne(updateAssistantDto.userId);
       assistant.user = user;
