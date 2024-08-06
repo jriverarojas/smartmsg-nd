@@ -42,5 +42,16 @@ export class AutomaticService {
     return res;
   }
 
+  async handleRequireFunction(type: string, assistantConfig: string, threadId: string, instanceId: number, channel: string, origin: string, functions: any, runId: string) {
+    switch (type) {
+        case 'openai':
+          await this.openaiservice.handleRequireFunction(assistantConfig, threadId, instanceId, channel, origin, functions, runId);
+          break;
+        // Add other cases for different services
+        default:
+          throw new Error(`Function ${type} not found`);
+    }
+  }
+
  
 }

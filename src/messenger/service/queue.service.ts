@@ -3,7 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Queue } from '../entities/queue.entity';
 import { Channel } from '../entities/channel.entity';
+import { Function } from '../entities/function.entity';
 import { WaapiService } from './waapi.service';
+import { FunctionService } from './function.service';
 import { EncryptionService } from '../../auth/service/encryption.service';
 
 @Injectable()
@@ -11,8 +13,10 @@ export class QueueService {
   constructor(
     @InjectRepository(Queue) private readonly queueRepository: Repository<Queue>,
     @InjectRepository(Channel) private readonly channelRepository: Repository<Channel>,
+    @InjectRepository(Function) private readonly functionRepository: Repository<Function>,
     private readonly encryptionService: EncryptionService,
     private readonly waapiService: WaapiService,
+    private readonly functionService: FunctionService,
   ) {}
 
 
@@ -22,21 +26,37 @@ export class QueueService {
     let myQueue = await this.queueRepository.create({ redisId:task.id, payload: taskPayload, status: 'PENDING' });
     myQueue = await this.queueRepository.save(myQueue);
 
-    // Find the channel
-    const channel = await this.channelRepository.findOne({ where: { code: task.channel } });
-
-    if (!channel) {
-      myQueue.errorReason = `Channel ${task.channel} not found`;
-      myQueue.status = 'ERROR';
-      await this.queueRepository.save(myQueue);
-      return;
+    let channel: Channel;
+    let myFunctions: Function[];
+    let decryptedConfig: string;
+    if (task.type === 'function') {
+      for (const f of task.functions) {
+        const myFunction = await this.functionRepository.findOne({ where: { name: task.functionName, assistantId: task.assistant } });
+        if (!myFunction) {
+          myQueue.errorReason = `Function ${task.channel} not found`;
+          myQueue.status = 'ERROR';
+          await this.queueRepository.save(myQueue);
+          return;
+        }
+        myFunctions.push(myFunction);
+      }
+      
+      
+    } else {
+      // Find the channel
+      channel = await this.channelRepository.findOne({ where: { code: task.channel } });
+      decryptedConfig = this.encryptionService.decrypt(channel.config);
+      if (!channel) {
+        myQueue.errorReason = `Channel ${task.channel} not found`;
+        myQueue.status = 'ERROR';
+        await this.queueRepository.save(myQueue);
+        return;
+      }
     }
 
-    // Decrypt the channel config
-    const decryptedConfig = this.encryptionService.decrypt(channel.config);
     try {
       // Dynamically load and call the service
-      await this.execute(channel.service, JSON.parse(decryptedConfig), task);
+      await this.execute(channel.service || 'function', decryptedConfig ? JSON.parse(decryptedConfig) : myFunctions, task);
     } catch(error) {
       //console.log(error);
       myQueue.errorReason = error.message;
@@ -50,11 +70,14 @@ export class QueueService {
     
   }
 
-  private async  execute(serviceName: string, config: any, taskPayload: any): Promise<void> {
+  private async  execute(serviceName: string, configOrFunction: any, taskPayload: any): Promise<void> {
     // Dynamically load and return the service
     switch (serviceName) {
       case 'waapi':
-        await this.waapiService.execute(config, taskPayload);
+        await this.waapiService.execute(configOrFunction, taskPayload);
+        break;
+      case 'function':
+        await this.functionService.execute(configOrFunction, taskPayload);
         break;
       // Add other cases for different services
       default:

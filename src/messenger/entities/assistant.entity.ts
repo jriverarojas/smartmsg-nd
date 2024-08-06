@@ -4,6 +4,7 @@ import { Category } from './category.entity';
 import { Thread } from './thread.entity';
 import { Message } from './message.entity';
 import { InstanceAssistant } from './instance-assistant.entity';
+import { Function } from './function.entity';
 
 @Entity()
 export class Assistant {
@@ -45,4 +46,7 @@ export class Assistant {
 
   @Column({ nullable: true })
   userId?: number;
+
+  @OneToMany(() => Function, func => func.assistant)
+  functions: Function[];
 }

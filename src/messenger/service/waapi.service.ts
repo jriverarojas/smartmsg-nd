@@ -146,11 +146,12 @@ export class WaapiService {
         if (assistant.isAutomatic) {
           if (isNewThread) {
             automaticRes = await this.automaticService.initConversation(assistant, 'waapi', instance.id, taskPayload.data.message.body, from);
+            thread.externalId = automaticRes.threadId;
+            await queryRunner.manager.save(thread);
           } else {
-            automaticRes = await this.automaticService.createMessage(assistant, 'waapi', instance.id, thread.id, taskPayload.data.message.body, from);
+            automaticRes = await this.automaticService.createMessage(assistant, 'waapi', instance.id, thread.externalId, taskPayload.data.message.body, from);
           }
-          thread.externalId = automaticRes.threadId;
-          await queryRunner.manager.save(thread);
+          
         }
 
       }

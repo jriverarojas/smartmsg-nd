@@ -18,6 +18,7 @@ import { Thread } from './entities/thread.entity';
 import { Category } from './entities/category.entity';
 import { Message } from './entities/message.entity';
 import { Assistant } from './entities/assistant.entity';
+import { Function } from './entities/function.entity';
 
 import { AuthModule } from 'src/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
@@ -30,10 +31,12 @@ import { WaapiService } from './service/waapi.service';
 import { InstanceAssistant } from './entities/instance-assistant.entity';
 import { AutomaticService } from './service/automatic.service';
 import { OpenaiService } from './service/openai.service';
+import { FunctionService } from './service/function.service';
+import { FunctionCall } from './entities/functioncall.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Channel, Thread, Category, Message, Assistant,Instance, Queue, InstanceAssistant]),
+    TypeOrmModule.forFeature([Channel, Thread, Category, Message, Assistant,Instance, Queue, InstanceAssistant, Function, FunctionCall]),
     AuthModule,
     RedisModule,
     ConfigModule,
@@ -51,6 +54,7 @@ import { OpenaiService } from './service/openai.service';
     WaapiService,
     AutomaticService,
     OpenaiService,
+    FunctionService,
   ],
 })
 export class MessengerModule {}

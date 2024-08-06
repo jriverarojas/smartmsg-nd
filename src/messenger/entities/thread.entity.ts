@@ -4,6 +4,7 @@ import { Category } from './category.entity';
 import { Message } from './message.entity';
 import { Assistant } from './assistant.entity';
 import { Instance } from './instance.entity';
+import { FunctionCall } from './functioncall.entity';
 
 @Entity()
 export class Thread {
@@ -41,4 +42,7 @@ export class Thread {
 
   @Column({ nullable: true })
   categoryId?: number;
+
+  @OneToMany(() => FunctionCall, functionCall => functionCall.thread)
+  functionCalls: FunctionCall[];
 }
