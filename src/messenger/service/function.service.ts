@@ -90,7 +90,7 @@ export class FunctionService {
             method: func.method,
             url,
             headers,
-            data: func.sendBodyParams ? params : undefined,
+            ...(func.sendBodyParams ? { data: params } : {}),
         });
         console.log('response',response);
 
