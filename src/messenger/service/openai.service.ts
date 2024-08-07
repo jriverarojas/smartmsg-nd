@@ -131,7 +131,7 @@ export class OpenaiService {
   private async waitForResponse(threadId: string, runId: string) : Promise<string | Run> {
     
       const runStatus = await this.waitForRunCompletion(threadId, runId);
-
+      console.log('runStatus',runStatus);
       if (runStatus === 'not_processed') {
         return 'Hay un problema al procesar su mensaje, intentelo nuevamente mas tarde'
       } else if (this.isRun(runStatus)){
@@ -147,6 +147,8 @@ export class OpenaiService {
         threadId
     );
     let lastAssistantMessage = null;
+
+    console.log('threadMessages', threadMessages);
 
     for (let i = threadMessages.data.length - 1; i >= 0; i--) {
       if (threadMessages.data[i].role === 'assistant') {
