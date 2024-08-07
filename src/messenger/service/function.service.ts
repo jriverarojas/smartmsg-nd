@@ -33,11 +33,11 @@ export class FunctionService {
         const func = functionEntities[index];
         const functionParams = f.params;
 
-        let decryptedHeaders = this.encryptionService.decrypt(func.headers);
+        let decryptedHeaders = func.headers ? this.encryptionService.decrypt(func.headers) : '{}';
         const headers = JSON.parse(decryptedHeaders);
         const params = JSON.parse(functionParams);
 
-        const url = this.replaceUrlParams(func.url, params);
+        const url = this.replaceUrlParams(this.encryptionService.decrypt(func.url), params);
 
         const response = await axios({
             method: func.method,
