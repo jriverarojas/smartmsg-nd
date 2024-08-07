@@ -80,12 +80,18 @@ export class FunctionService {
 
         const url = this.replaceUrlParams(this.encryptionService.decrypt(func.url), params);
 
+        console.log('func.method', func.method);
+        console.log('url', func.method);
+        console.log('headers', func.method);
+        console.log('data', params);
+
         const response = await axios({
             method: func.method,
             url,
             headers,
             data: func.sendBodyParams ? params : undefined,
         });
+        console.log('response',response);
 
         const template = Handlebars.compile(func.templateSource);
         const result = template(response.data);
