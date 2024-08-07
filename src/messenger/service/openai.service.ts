@@ -45,7 +45,7 @@ export class OpenaiService {
   }
 
   async createMessage(assistant: Assistant, channel: string, instanceId: number, threadId: string, message: string, origin: string): Promise<AutomaticCreateMessageResponse> {
-    console.log('create message', threadId);
+    console.log('create message', threadId, message);
     const decryptedConfig = this.encryptionService.decrypt(assistant.config);
     const config = JSON.parse(decryptedConfig)
     let res: string | Run;
