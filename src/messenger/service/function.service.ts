@@ -82,8 +82,8 @@ export class FunctionService {
         const url = this.replaceUrlParams(this.encryptionService.decrypt(func.url), params);
 
         console.log('func.method', func.method);
-        console.log('url', func.url);
-        console.log('headers', func.headers);
+        console.log('url', url);
+        console.log('headers', headers);
         console.log('data', params);
 
         const response = await axios({

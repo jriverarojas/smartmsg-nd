@@ -69,6 +69,7 @@ export class OpenaiService {
   }
 
   async handleRequireFunction(assistantConfig: string, threadId: string, instanceId: number, channel: string, origin: string, functions:any, runId: string): Promise<AutomaticCreateMessageResponse> {
+    console.log('handleRequireFunction', assistantConfig, threadId, instanceId);
     const decryptedConfig = this.encryptionService.decrypt(assistantConfig);
     const config = JSON.parse(decryptedConfig)
     let res: string | Run;
