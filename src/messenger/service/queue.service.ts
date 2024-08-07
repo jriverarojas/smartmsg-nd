@@ -27,7 +27,7 @@ export class QueueService {
     myQueue = await this.queueRepository.save(myQueue);
 
     let channel: Channel;
-    let myFunctions: Function[];
+    let myFunctions: Function[] = [];
     let decryptedConfig: string;
     if (task.type === 'function') {
       for (const f of task.functions) {
