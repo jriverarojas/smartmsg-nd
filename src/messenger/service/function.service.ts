@@ -72,6 +72,7 @@ export class FunctionService {
       let index = 0;
       for (const f of functions) {
         const func = functionEntities[index];
+        console.log('FUNC', func);
         const functionParams = f.params;
 
         let decryptedHeaders = func.headers ? this.encryptionService.decrypt(func.headers) : '{}';
@@ -81,8 +82,8 @@ export class FunctionService {
         const url = this.replaceUrlParams(this.encryptionService.decrypt(func.url), params);
 
         console.log('func.method', func.method);
-        console.log('url', func.method);
-        console.log('headers', func.method);
+        console.log('url', func.url);
+        console.log('headers', func.headers);
         console.log('data', params);
 
         const response = await axios({

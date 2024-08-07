@@ -54,7 +54,7 @@ export class QueueService {
 
     try {
       // Dynamically load and call the service
-      await this.execute(task.type === 'function' ? 'function' : channel.service, decryptedConfig ? JSON.parse(decryptedConfig) : myFunctions, task);
+      await this.execute(task.type === 'function' ? 'function' : channel.service, task.type === 'function' ? myFunctions : JSON.parse(decryptedConfig), task);
     } catch(error) {
       console.log('ERROR!!!!:',error);
       myQueue.errorReason = error.message;
