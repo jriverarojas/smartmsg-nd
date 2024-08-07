@@ -33,6 +33,7 @@ import { AutomaticService } from './service/automatic.service';
 import { OpenaiService } from './service/openai.service';
 import { FunctionService } from './service/function.service';
 import { FunctionCall } from './entities/functioncall.entity';
+import { FunctionController } from './controller/function.controller';
 
 @Module({
   imports: [
@@ -41,7 +42,7 @@ import { FunctionCall } from './entities/functioncall.entity';
     RedisModule,
     ConfigModule,
   ],
-  controllers: [ChannelController, CategoryController, ThreadController, MessageController, AssistantController, QueueController],
+  controllers: [ChannelController, CategoryController, ThreadController, MessageController, AssistantController, QueueController, FunctionController],
   providers: [
     ChannelService, 
     CategoryService, 
