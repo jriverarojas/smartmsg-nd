@@ -153,7 +153,7 @@ export class OpenaiService {
     console.dir(threadMessages, { depth: null, colors: true });
 
 
-    for (let i = threadMessages.data.length - 1; i >= 0; i--) {
+    for (let i = 0; i < threadMessages.data.length; i++) {
       if (threadMessages.data[i].role === 'assistant') {
         lastAssistantMessage = threadMessages.data[i];
         
