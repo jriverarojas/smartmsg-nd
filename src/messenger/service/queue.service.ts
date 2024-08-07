@@ -74,6 +74,7 @@ export class QueueService {
         await this.waapiService.execute(configOrFunction, taskPayload);
         break;
       case 'function':
+        console.log('FUNCTION!!!!');
         await this.functionService.execute(configOrFunction, taskPayload);
         break;
       // Add other cases for different services
