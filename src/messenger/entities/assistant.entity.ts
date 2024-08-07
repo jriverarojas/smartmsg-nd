@@ -20,7 +20,7 @@ export class Assistant {
   @Column()
   isAutomatic: boolean;
 
-  @Column()
+  @Column({ default: false })
   isDefault: boolean;
 
   @Column()
