@@ -157,8 +157,8 @@ export class OpenaiService {
         break;
       }
     }
-    console.log('lastAssistantMessage.content', lastAssistantMessage.content);
-    return lastAssistantMessage.content.text.value;
+    console.log('lastAssistantMessage.content[0].text', lastAssistantMessage.content[0].text);
+    return lastAssistantMessage.content[0].text.value;
   }
 
   private async waitForRunCompletion(threadId: string, runId: string) : Promise<string|Run>  {
