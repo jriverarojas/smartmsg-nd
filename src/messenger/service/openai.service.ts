@@ -45,7 +45,6 @@ export class OpenaiService {
   }
 
   async createMessage(assistant: Assistant, channel: string, instanceId: number, threadId: string, message: string, origin: string): Promise<AutomaticCreateMessageResponse> {
-    console.log('create message', threadId, message);
     const decryptedConfig = this.encryptionService.decrypt(assistant.config);
     const config = JSON.parse(decryptedConfig)
     let res: string | Run;
@@ -160,7 +159,6 @@ export class OpenaiService {
         break;
       }
     }
-    console.log('lastAssistantMessage.content[0].text', lastAssistantMessage.content[0].text);
     return lastAssistantMessage.content[0].text.value;
   }
 
@@ -172,7 +170,7 @@ export class OpenaiService {
       if (run.status === 'completed' || run.status === 'cancelled' || run.status === 'failed' || run.status === 'expired' || run.status === 'requires_action') {
         break;
       }
-      await new Promise(resolve => setTimeout(resolve, 1000 * factor));
+      await new Promise(resolve => setTimeout(resolve, 500 * factor));
       factor = factor * 1.2;
     } while ((run.status === 'queued' || run.status === 'in_progress') && factor < 3);
     if (run.status === 'requires_action') {

@@ -34,7 +34,7 @@ export class WorkerService implements OnModuleInit, OnModuleDestroy {
         }
       } else {
         // No task to process, wait for a short time before trying again
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 500));
       }
     }
   }

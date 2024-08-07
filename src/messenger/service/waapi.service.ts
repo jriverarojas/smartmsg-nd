@@ -42,7 +42,6 @@ export class WaapiService {
     try {
       await validateOrReject(dto);
     } catch (errors) {
-      console.dir(errors, { depth: null, colors: true });
       throw new BadRequestException(errors);
     }
   }
@@ -57,8 +56,6 @@ export class WaapiService {
         expirationDate: MoreThan(now),
       },
     });
-
-    console.log('thread', thread);
 
     if (thread) {
       thread.expirationDate = new Date(now.getTime() + 30 * 60000);
