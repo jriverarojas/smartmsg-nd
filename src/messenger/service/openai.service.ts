@@ -30,11 +30,8 @@ export class OpenaiService {
         messages: [{ role: 'user', content: message }],
       }
     });
-    console.log('run', run);
     res = await this.waitForResponse(run.thread_id, run.id);
-    console.log('res', res);
     const response = await this.handleResponse(res, channel, instanceId, origin, run.thread_id, assistant.config, run.id);
-    console.log('response', response);
     return {
         runId: run.id,
         threadId: run.thread_id,
@@ -69,7 +66,6 @@ export class OpenaiService {
   }
 
   async handleRequireFunction(assistantConfig: string, threadId: string, instanceId: number, channel: string, origin: string, functions:any, runId: string): Promise<AutomaticCreateMessageResponse> {
-    console.log('handleRequireFunction', assistantConfig, threadId, instanceId);
     const decryptedConfig = this.encryptionService.decrypt(assistantConfig);
     const config = JSON.parse(decryptedConfig)
     let res: string | Run;
@@ -132,7 +128,6 @@ export class OpenaiService {
   private async waitForResponse(threadId: string, runId: string) : Promise<string | Run> {
     
       const runStatus = await this.waitForRunCompletion(threadId, runId);
-      console.log('runStatus',runStatus);
       if (runStatus === 'not_processed') {
         return 'Hay un problema al procesar su mensaje, intentelo nuevamente mas tarde'
       } else if (this.isRun(runStatus)){
@@ -148,10 +143,6 @@ export class OpenaiService {
         threadId
     );
     let lastAssistantMessage = null;
-
-    console.log('threadMessages: ');
-    console.dir(threadMessages, { depth: null, colors: true });
-
 
     for (let i = 0; i < threadMessages.data.length; i++) {
       if (threadMessages.data[i].role === 'assistant') {
@@ -173,6 +164,7 @@ export class OpenaiService {
       }
       await new Promise(resolve => setTimeout(resolve, 500 * factor));
       factor = factor * 1.2;
+      console.log('NEW RUN: ', new Date(),run.status);
     } while ((run.status === 'queued' || run.status === 'in_progress') && factor < 3);
     if (run.status === 'requires_action') {
       return run;

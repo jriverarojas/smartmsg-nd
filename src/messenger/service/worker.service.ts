@@ -23,6 +23,7 @@ export class WorkerService implements OnModuleInit, OnModuleDestroy {
     console.log('Worker is listening');
     while (this.isRunning) {
       const task = await this.redisService.consumeFromQueue();
+      console.log('NEW TASK: ', new Date(),task);
       if (task) {
         try {
           // Process the task

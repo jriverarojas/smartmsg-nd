@@ -17,7 +17,6 @@ export class QueueController {
     @Body() body: any
   ): Promise<{ id: string }> {
     try {
-      console.log('enqueue',type, channel, instance, body);
       const id = await this.redisService.addToQueue({
         ...body,
         type,
