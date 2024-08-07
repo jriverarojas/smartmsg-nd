@@ -93,7 +93,7 @@ export class WaapiService {
         throw new Error('Failed to send message');
       }
 
-      const thread = await this.findOrCreateThread(queryRunner, instance, taskPayload.toFrom);
+      const { thread } = await this.findOrCreateThread(queryRunner, instance, taskPayload.toFrom);
 
       const message = queryRunner.manager.create(Message, {
         thread,
