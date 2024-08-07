@@ -113,6 +113,7 @@ export class OpenaiService {
           origin,
           firedBy: 'openai',
           runId,
+          assistantConfig,
         });
         return '__running_function'
       }
@@ -123,7 +124,6 @@ export class OpenaiService {
         type: 'out',
         channel,
         instance: `${instanceId}`,
-        assistantConfig
       });
       return response;
     }
