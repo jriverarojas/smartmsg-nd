@@ -10,7 +10,6 @@ import { EncryptionService } from 'src/auth/service/encryption.service';
 
 @Injectable()
 export class AssistantService {
-  //x: string]: any;
   constructor(
     @InjectRepository(Assistant) private readonly assistantRepository: Repository<Assistant>,
     @InjectRepository(InstanceAssistant) private readonly instanceAssistantRepository: Repository<InstanceAssistant>,
@@ -36,7 +35,9 @@ export class AssistantService {
   }
 
   async findOne(id: number): Promise<Assistant> {
-    return this.assistantRepository.findOne({ where: { id }, relations: ['user', 'categories', 'threads'] });
+     const assistant =  await this.assistantRepository.findOne({ where: { id }, relations: ['user', 'categories', 'threads'] });
+     assistant.config = this.encryptionService.decrypt(assistant.config);
+     return assistant;
   }
 
   async update(id: number, updateAssistantDto: UpdateAssistantDto): Promise<Assistant> {
