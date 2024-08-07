@@ -21,6 +21,9 @@ export class Assistant {
   isAutomatic: boolean;
 
   @Column()
+  isDefault: boolean;
+
+  @Column()
   working: string; // 'Y' or 'N'
 
   @Column({ type: 'text', nullable: true })
