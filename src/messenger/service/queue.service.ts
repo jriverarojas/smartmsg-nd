@@ -29,28 +29,25 @@ export class QueueService {
     let channel: Channel;
     let myFunctions: Function[] = [];
     let decryptedConfig: string;
+    // Find the channel
+    channel = await this.channelRepository.findOne({ where: { code: task.channel } });
+    decryptedConfig = this.encryptionService.decrypt(channel.config);
+    if (!channel) {
+      myQueue.errorReason = `Channel ${task.channel} not found`;
+      myQueue.status = 'ERROR';
+      await this.queueRepository.save(myQueue);
+      return;
+    }
     if (task.type === 'function') {
       for (const f of task.functions) {
         const myFunction = await this.functionRepository.findOne({ where: { name: task.functionName, assistantId: task.assistant } });
         if (!myFunction) {
-          myQueue.errorReason = `Function ${task.channel} not found`;
+          myQueue.errorReason = `Function ${task.functionName} not found`;
           myQueue.status = 'ERROR';
           await this.queueRepository.save(myQueue);
           return;
         }
         myFunctions.push(myFunction);
-      }
-      
-      
-    } else {
-      // Find the channel
-      channel = await this.channelRepository.findOne({ where: { code: task.channel } });
-      decryptedConfig = this.encryptionService.decrypt(channel.config);
-      if (!channel) {
-        myQueue.errorReason = `Channel ${task.channel} not found`;
-        myQueue.status = 'ERROR';
-        await this.queueRepository.save(myQueue);
-        return;
       }
     }
 
