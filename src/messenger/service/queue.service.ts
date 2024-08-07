@@ -39,6 +39,7 @@ export class QueueService {
       return;
     }
     if (task.type === 'function') {
+      console.log('FUNCTION!!!!');
       for (const f of task.functions) {
         const myFunction = await this.functionRepository.findOne({ where: { name: task.functionName, assistantId: task.assistant } });
         if (!myFunction) {
@@ -55,7 +56,7 @@ export class QueueService {
       // Dynamically load and call the service
       await this.execute(channel.service || 'function', decryptedConfig ? JSON.parse(decryptedConfig) : myFunctions, task);
     } catch(error) {
-      //console.log(error);
+      console.log('ERROR!!!!:',error);
       myQueue.errorReason = error.message;
       myQueue.status = 'ERROR';
       await this.queueRepository.save(myQueue);
