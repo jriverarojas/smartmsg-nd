@@ -58,6 +58,8 @@ export class WaapiService {
       },
     });
 
+    console.log('thread', thread);
+
     if (thread) {
       thread.expirationDate = new Date(now.getTime() + 30 * 60000);
       await queryRunner.manager.save(thread);

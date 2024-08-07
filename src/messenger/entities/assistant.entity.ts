@@ -20,9 +20,6 @@ export class Assistant {
   @Column()
   isAutomatic: boolean;
 
-  @Column({ default: false })
-  isDefault: boolean;
-
   @Column()
   working: string; // 'Y' or 'N'
 

@@ -30,10 +30,11 @@ export class OpenaiService {
         messages: [{ role: 'user', content: message }],
       }
     });
-
+    console.log('run', run);
     res = await this.waitForResponse(run.thread_id, run.id);
+    console.log('res', res);
     const response = await this.handleResponse(res, channel, instanceId, origin, run.thread_id, assistant.config, run.id);
-
+    console.log('response', response);
     return {
         runId: run.id,
         threadId: run.thread_id,
