@@ -5,6 +5,7 @@ import { UpdatePasswordDto } from '../dto/update-password.dto';
 import { User } from '../entities/user.entity';
 import { Permissions } from '../decorators/permissions.decorator';
 import { PermissionsGuard } from '../guards/permissions.guard';
+import { Request } from 'express';
 
 @Controller('user')
 @UseGuards(PermissionsGuard)
@@ -27,14 +28,14 @@ export class UserController {
 
   @Post('refresh-token')
   @Permissions('tokens')
-  refreshToken(@Req() request: Request, context: ExecutionContext): Promise<any> {
-    return this.userService.generateRefreshToken(context);
+  refreshToken(@Req() request: Request): Promise<any> {
+    return this.userService.generateRefreshToken(request);
   }
 
   @Post('access-token')
   @Permissions('tokens')
-  accessToken(@Req() request: Request, context: ExecutionContext): Promise<any> {
-    return this.userService.generateAccessToken(context);
+  accessToken(@Req() request: Request): Promise<any> {
+    return this.userService.generateAccessToken(request);
   }
 
   @Put(':id/update-password')

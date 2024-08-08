@@ -7,6 +7,7 @@ import { UpdatePasswordDto } from '../dto/update-password.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { RedisService } from 'src/redis/redis.service';
+import { Request } from 'express';
 
 @Injectable()
 export class UserService {
@@ -38,10 +39,8 @@ export class UserService {
     
   }
 
-  async generateRefreshToken(context: ExecutionContext): Promise<any> {
-    console.log('llega');
-    const request = context.switchToHttp().getRequest();
-    console.log('llega0',request);
+  async generateRefreshToken(request: Request): Promise<any> {
+    
     const id = request.userId;
     console.log('llega',id);
     const user = await this.findOne(id);
@@ -58,8 +57,8 @@ export class UserService {
     }
   }
 
-  async generateAccessToken(context: ExecutionContext): Promise<any> {
-    const request = context.switchToHttp().getRequest();
+  async generateAccessToken(request: Request): Promise<any> {
+    
     const id = request.userId;
     const user = await this.findOne(id);
     
