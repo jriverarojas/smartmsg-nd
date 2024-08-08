@@ -28,11 +28,4 @@ export class QueueController {
       throw new HttpException('Failed to add to queue', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-
-  @Get('first')
-  @PermissionsRedis()
-  async getFirstFromQueue(): Promise<any> {
-    const item = await this.redisService.getFirstFromQueue();
-    return item;
-  }
 }
