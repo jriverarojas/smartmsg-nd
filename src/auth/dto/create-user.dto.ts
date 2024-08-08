@@ -16,8 +16,7 @@ export class CreateUserDto {
   readonly password: string;
 
   @IsBoolean()
-  @IsOptional()
-  readonly isApiUser?: boolean;
+  readonly isApiUser: boolean;
 
   @IsString()
   @IsOptional()

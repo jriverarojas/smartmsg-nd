@@ -10,8 +10,7 @@ import {
   class IsPasswordRequiredConstraint implements ValidatorConstraintInterface {
     validate(password: any, args: ValidationArguments) {
       const object = args.object as any;
-      // Si isApiUser es verdadero, el password puede ser null o undefined.
-      // Si isApiUser es falso o undefined, el password debe estar presente.
+      console.log('validateweeee:', object.isApiUser);
       if (object.isApiUser) {
         return true;
       }
