@@ -44,7 +44,6 @@ export class UserService {
     const id = request.userId;
     const user = await this.findOne(id);
     if (user.isApiUser) {
-      console.log('llega2', user);
       const payload = { email: user.email, sub: user.id };
       const refreshToken = this.jwtService.sign(payload, { expiresIn: '48h' });
       const accessToken = this.jwtService.sign(payload, { expiresIn: '30m' });
@@ -56,7 +55,6 @@ export class UserService {
   }
 
   async generateAccessToken(request: Request): Promise<any> {
-    console.log('generateAccessToken', request);
     const id = request.userId;
     const user = await this.findOne(id);
     

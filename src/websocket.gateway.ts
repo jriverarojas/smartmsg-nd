@@ -24,6 +24,7 @@ import {
   
     async handleConnection(client: Socket) {
       try {
+        console.log('CONNECTIONNNNN');
         const token = client.handshake.query.token as string;
         const decoded = this.jwtService.verify(token);
         client.data.user = decoded.sub;
