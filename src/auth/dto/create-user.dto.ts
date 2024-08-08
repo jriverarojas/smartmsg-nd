@@ -1,4 +1,4 @@
-import { IsString, IsEmail, IsOptional, IsBoolean } from 'class-validator';
+import { IsString, IsEmail, IsOptional, IsBoolean, ValidateIf } from 'class-validator';
 import { IsPasswordRequired } from './custom-validators';
 
 export class CreateUserDto {
@@ -7,7 +7,8 @@ export class CreateUserDto {
 
   @IsEmail()
   readonly email: string;
-
+  
+  @ValidateIf(o => !o.isApiUser)
   @IsString()
   @IsPasswordRequired({
     message: 'Password is required unless the user is an API user.',
