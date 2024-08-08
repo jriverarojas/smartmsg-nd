@@ -56,7 +56,7 @@ export class UserService {
   }
 
   async generateAccessToken(request: Request): Promise<any> {
-    console.log(request);
+    console.log('generateAccessToken', request);
     const id = request.userId;
     const user = await this.findOne(id);
     
