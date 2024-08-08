@@ -31,9 +31,11 @@ export class PermissionsGuard implements CanActivate {
     if (!token) {
       throw new UnauthorizedException('Token not found');
     }
-   
+    console.log('token', token);
     const decoded = this.jwtService.verify(token);
+    console.log('decoded', decoded);
     const user = await this.usersService.findOne(decoded.sub);
+    console.log('user', user);
     
     if (!user) {
       throw new UnauthorizedException('User not found');
