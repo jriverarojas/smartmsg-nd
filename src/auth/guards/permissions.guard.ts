@@ -14,7 +14,7 @@ export class PermissionsGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    console.log('activate');
+    
     const permissions = this.reflector.get<string[]>(PERMISSIONS_KEY, context.getHandler());
     if (!permissions) {
       return true;
@@ -31,11 +31,11 @@ export class PermissionsGuard implements CanActivate {
     if (!token) {
       throw new UnauthorizedException('Token not found');
     }
-    console.log('token', token);
+    
     const decoded = this.jwtService.verify(token);
-    console.log('decoded', decoded);
+    
     const user = await this.usersService.findOne(decoded.sub);
-    console.log('user', user);
+    
     
     if (!user) {
       throw new UnauthorizedException('User not found');

@@ -35,7 +35,6 @@ export class UserController {
   @Post('access-token')
   @Permissions('tokens')
   accessToken(@Req() request: Request): Promise<any> {
-    console.log('controller');
     return this.userService.generateAccessToken(request);
   }
 
