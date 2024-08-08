@@ -41,7 +41,9 @@ export class UserService {
   async generateRefreshToken(context: ExecutionContext): Promise<any> {
     console.log('llega');
     const request = context.switchToHttp().getRequest();
+    console.log('llega0',request);
     const id = request.userId;
+    console.log('llega',id);
     const user = await this.findOne(id);
     console.log('llega1',request);
     if (user.isApiUser) {
