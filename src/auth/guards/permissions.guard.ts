@@ -15,7 +15,6 @@ export class PermissionsGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const permissions = this.reflector.get<string[]>(PERMISSIONS_KEY, context.getHandler());
-    console.log('matchPermissions1');
     if (!permissions) {
       return true;
     }
@@ -26,7 +25,7 @@ export class PermissionsGuard implements CanActivate {
     if (!authHeader) {
       throw new UnauthorizedException('Authorization header not found');
     }
-    console.log('matchPermissions2');
+    
     const token = authHeader.split(' ')[1];
     if (!token) {
       throw new UnauthorizedException('Token not found');
@@ -34,7 +33,7 @@ export class PermissionsGuard implements CanActivate {
    
     const decoded = this.jwtService.verify(token);
     const user = await this.usersService.findOne(decoded.sub);
-    console.log('matchPermissions3');
+    
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
@@ -43,7 +42,7 @@ export class PermissionsGuard implements CanActivate {
   }
 
   private matchPermissions(requiredPermissions: string[], userRoles: Role[]): boolean {
-    console.log('matchPermissions-1', userRoles);
+    
     for (const role of userRoles) {
       if (role.name === 'admin') {
         return true;
@@ -54,7 +53,6 @@ export class PermissionsGuard implements CanActivate {
         }
       }
     }
-    console.log('matchPermissions');
     return false;
   }
 }

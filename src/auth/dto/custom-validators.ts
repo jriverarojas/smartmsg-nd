@@ -10,7 +10,6 @@ import {
   class IsPasswordRequiredConstraint implements ValidatorConstraintInterface {
     validate(password: any, args: ValidationArguments) {
       const object = args.object as any;
-      console.log('validateweeee:', object.isApiUser);
       if (object.isApiUser) {
         return true;
       }
