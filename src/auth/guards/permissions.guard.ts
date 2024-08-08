@@ -52,6 +52,7 @@ export class PermissionsGuard implements CanActivate {
         }
       }
     }
+    console.log('matchPermissions');
     return false;
   }
 }
