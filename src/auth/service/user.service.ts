@@ -56,7 +56,7 @@ export class UserService {
   }
 
   async generateAccessToken(request: Request): Promise<any> {
-    
+    console.log(request);
     const id = request.userId;
     const user = await this.findOne(id);
     
@@ -66,7 +66,7 @@ export class UserService {
       
       return { accessToken};
     } else {
-      throw new BadRequestException('Generate Refresh Token is only allowed for API users.');
+      throw new BadRequestException('Generate Access Token is only allowed for API users.');
     }
   }
 
