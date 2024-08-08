@@ -42,9 +42,7 @@ export class UserService {
   async generateRefreshToken(request: Request): Promise<any> {
     
     const id = request.userId;
-    console.log('llega',id);
     const user = await this.findOne(id);
-    console.log('llega1',request);
     if (user.isApiUser) {
       console.log('llega2', user);
       const payload = { email: user.email, sub: user.id };

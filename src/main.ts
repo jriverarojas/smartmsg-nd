@@ -4,6 +4,7 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
 import { ValidationPipe, BadRequestException } from '@nestjs/common';
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -45,7 +46,14 @@ async function bootstrap() {
 
   await app.startAllMicroservices();
   
+  const corsOptions: CorsOptions = {
+    origin: ['localhost'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+    allowedHeaders: 'Content-Type, Authorization',
+  };
 
+  app.enableCors(corsOptions);
   const port = configService.get<number>('APP_PORT') || 3000;
   await app.listen(port);
   console.log(`Application is running on: ${await app.getUrl()}`);
