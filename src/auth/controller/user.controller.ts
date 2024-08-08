@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, UseGuards, ExecutionContext, Req } from '@nestjs/common';
 import { UserService } from '../service/user.service';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdatePasswordDto } from '../dto/update-password.dto';
@@ -23,6 +23,18 @@ export class UserController {
   createApiUser(@Body() createUserDto: CreateUserDto): Promise<any> {
     const userDto = { ...createUserDto, isApiUser: true };
     return this.userService.create(userDto);
+  }
+
+  @Post('refresh-token')
+  @Permissions('tokens')
+  refreshToken(@Req() request: Request, context: ExecutionContext): Promise<any> {
+    return this.userService.generateRefreshToken(context);
+  }
+
+  @Post('access-token')
+  @Permissions('tokens')
+  accessToken(@Req() request: Request, context: ExecutionContext): Promise<any> {
+    return this.userService.generateAccessToken(context);
   }
 
   @Put(':id/update-password')

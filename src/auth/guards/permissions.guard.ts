@@ -37,6 +37,7 @@ export class PermissionsGuard implements CanActivate {
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
+    request.userId = user.id;
     return this.matchPermissions(permissions, user.roles);
   }
 

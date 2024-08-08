@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, ExecutionContext } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
@@ -38,12 +38,43 @@ export class UserService {
     
   }
 
+  async generateRefreshToken(context: ExecutionContext): Promise<any> {
+    const request = context.switchToHttp().getRequest();
+    const id = request.userId;
+    const user = await this.findOne(id);
+    
+    if (user.isApiUser) {
+      const payload = { email: user.email, sub: user.id };
+      const refreshToken = this.jwtService.sign(payload, { expiresIn: '48h' });
+      const accessToken = this.jwtService.sign(payload, { expiresIn: '30m' });
+      
+      return { refreshToken, accessToken};
+    } else {
+      throw new BadRequestException('Generate Refresh Token is only allowed for API users.');
+    }
+  }
+
+  async generateAccessToken(context: ExecutionContext): Promise<any> {
+    const request = context.switchToHttp().getRequest();
+    const id = request.userId;
+    const user = await this.findOne(id);
+    
+    if (user.isApiUser) {
+      const payload = { email: user.email, sub: user.id };
+      const accessToken = this.jwtService.sign(payload, { expiresIn: '30m' });
+      
+      return { accessToken};
+    } else {
+      throw new BadRequestException('Generate Refresh Token is only allowed for API users.');
+    }
+  }
+
   async findAll(): Promise<User[]> {
     return this.usersRepository.find();
   }
 
   async findOne(id: number): Promise<User> {
-    const user = await this.usersRepository.findOne({ where: { id }, relations: ['roles'], cache: true });
+    const user = await this.usersRepository.findOne({ where: { id }, relations: ['roles'] });
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
