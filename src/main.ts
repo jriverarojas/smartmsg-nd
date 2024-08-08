@@ -47,7 +47,7 @@ async function bootstrap() {
   await app.startAllMicroservices();
   
   const corsOptions: CorsOptions = {
-    origin: ['http://localhost:9000/'],
+    origin: ['http://localhost:9000'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     allowedHeaders: 'Content-Type, Authorization',
