@@ -43,7 +43,7 @@ export class PermissionsGuard implements CanActivate {
   }
 
   private matchPermissions(requiredPermissions: string[], userRoles: Role[]): boolean {
-    console.log('matchPermissions-1');
+    console.log('matchPermissions-1', userRoles);
     for (const role of userRoles) {
       if (role.name === 'admin') {
         return true;
