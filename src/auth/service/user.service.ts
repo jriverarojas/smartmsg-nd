@@ -39,11 +39,13 @@ export class UserService {
   }
 
   async generateRefreshToken(context: ExecutionContext): Promise<any> {
+    console.log('llega');
     const request = context.switchToHttp().getRequest();
     const id = request.userId;
     const user = await this.findOne(id);
-    
+    console.log('llega1',request);
     if (user.isApiUser) {
+      console.log('llega2', user);
       const payload = { email: user.email, sub: user.id };
       const refreshToken = this.jwtService.sign(payload, { expiresIn: '48h' });
       const accessToken = this.jwtService.sign(payload, { expiresIn: '30m' });
