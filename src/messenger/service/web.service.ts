@@ -11,6 +11,8 @@ import { AssistantService } from './assistant.service';
 import { RedisService } from 'src/redis/redis.service';
 import { AutomaticService } from './automatic.service';
 import { AutomaticCreateMessageResponse } from 'src/common/types/automatic-create-message-response.type';
+import { WebsocketGateway } from '../websocket.gateway';
+import { ThreadService } from './thread.service';
 
 @Injectable()
 export class WebService {
@@ -22,6 +24,9 @@ export class WebService {
     private readonly assistantService: AssistantService,
     private readonly redisService: RedisService,
     private readonly automaticService: AutomaticService,
+    private readonly websocketGateway: WebsocketGateway,
+    private readonly threadService: ThreadService,
+
   ) {}
 
   async execute(config: any, taskPayload: any): Promise<void> {
@@ -42,33 +47,6 @@ export class WebService {
     }
   }
 
-  private async findOrCreateThread(queryRunner: any, instance: Instance, externalInstance: string): Promise<any> {
-    const now = new Date(new Date().toISOString());
-    let isNewThread = true;
-    let thread = await queryRunner.manager.findOne(Thread, {
-      where: {
-        instanceId: instance.id,
-        externalInstance,
-        expirationDate: MoreThan(now),
-      },
-    });
-
-    if (thread) {
-      thread.expirationDate = new Date(now.getTime() + 30 * 60000);
-      await queryRunner.manager.save(thread);
-      isNewThread = false;
-    } else {
-      thread = queryRunner.manager.create(Thread, {
-        instance,
-        externalInstance,
-        expirationDate: new Date(now.getTime() + 30 * 60000),
-      });
-      await queryRunner.manager.save(thread);
-    }
-
-    return { isNewThread, thread };
-  }
-
   private async handleOutgoingMessage(taskPayload: any): Promise<void> {
     const queryRunner = this.dataSource.createQueryRunner();
 
@@ -81,9 +59,9 @@ export class WebService {
         throw new Error(`Instance with ID ${taskPayload.instance} not found`);
       }
 
-      const { thread } = await this.findOrCreateThread(queryRunner, instance, taskPayload.toFrom);
+      const { thread } = await this.threadService.findOrCreateThread(queryRunner, instance, taskPayload.toFrom);
 
-      const message = queryRunner.manager.create(Message, {
+      let message = queryRunner.manager.create(Message, {
         thread,
         message: taskPayload.message,
         dateCreated: new Date(),
@@ -92,7 +70,9 @@ export class WebService {
         queueId: taskPayload.id,
         type: 'outgoing',
       });
-      await queryRunner.manager.save(message);
+      message = await queryRunner.manager.save(message);
+
+      this.websocketGateway.sendMessage(thread.externalInstance, message);
 
       await queryRunner.commitTransaction();
     } catch (error) {
@@ -115,7 +95,7 @@ export class WebService {
         throw new Error(`Instance with ID ${taskPayload.instance} not found`);
       }
 
-      const { isNewThread, thread } = await this.findOrCreateThread(queryRunner, instance, taskPayload.toFrom);
+      const { isNewThread, thread } = await this.threadService.findOrCreateThread(queryRunner, instance, taskPayload.toFrom);
       let assistant = await this.assistantService.getAssistant(instance.id, null);
 
       if (!assistant) {
@@ -141,7 +121,7 @@ export class WebService {
         }
       }
 
-      const message = queryRunner.manager.create(Message, {
+      let message = queryRunner.manager.create(Message, {
         thread,
         message: taskPayload.message,
         dateCreated: new Date(),
@@ -150,7 +130,8 @@ export class WebService {
         type: 'incoming',
         refId: taskPayload.refId,
       });
-      await queryRunner.manager.save(message);
+      message = await queryRunner.manager.save(message);
+      this.websocketGateway.sendMessage(thread.externalInstance, message);
 
       await queryRunner.commitTransaction();
     } catch (error) {

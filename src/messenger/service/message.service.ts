@@ -6,7 +6,6 @@ import { CreateMessageDto } from '../dto/create-message.dto';
 import { UpdateMessageDto } from '../dto/update-message.dto';
 import { AssistantService } from './assistant.service';
 import { ThreadService } from './thread.service';
-import { WebsocketGateway } from 'src/messenger/websocket.gateway';
 
 @Injectable()
 export class MessageService {
@@ -15,7 +14,6 @@ export class MessageService {
     private readonly messageRepository: Repository<Message>,
     private readonly assistantService: AssistantService,
     private readonly threadService: ThreadService,
-    private readonly messagesGateway: WebsocketGateway,
   ) {}
 
   async create(createMessageDto: CreateMessageDto): Promise<Message> {
@@ -29,7 +27,6 @@ export class MessageService {
     if (createMessageDto.threadId) {
       const thread = await this.threadService.findOne(createMessageDto.threadId);
       message.thread = thread;
-      this.messagesGateway.sendMessage(thread.externalInstance, message);
     }
     
     return this.messageRepository.save(message);
