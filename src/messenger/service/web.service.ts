@@ -104,7 +104,6 @@ export class WebService {
   }
 
   private async handleIncomingMessage(taskPayload: any): Promise<void> {
-    const from = taskPayload.data.message.from.split('@')[0];
     const queryRunner = this.dataSource.createQueryRunner();
     let automaticRes : AutomaticCreateMessageResponse;
     await queryRunner.connect();
