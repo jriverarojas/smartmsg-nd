@@ -110,7 +110,7 @@ export class WebService {
     await queryRunner.startTransaction();
 
     try {
-      const instance = await queryRunner.manager.findOne(Instance, { where: { number: taskPayload.instance } });
+      const instance = await queryRunner.manager.findOne(Instance, { where: { id: taskPayload.instance } });
       if (!instance) {
         throw new Error(`Instance with ID ${taskPayload.instance} not found`);
       }
