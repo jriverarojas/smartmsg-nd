@@ -24,7 +24,6 @@ import {
   
     async handleConnection(client: Socket) {
       try {
-        console.log('CONNECTIONNNNN');
         const token = client.handshake.query.token as string;
         const decoded = this.jwtService.verify(token);
         client.data.user = decoded.sub;
@@ -37,14 +36,14 @@ import {
       console.log(`Client disconnected: ${client.id}`);
     }
   
-    @SubscribeMessage('message')
-    handleMessage(@MessageBody() message: string, @ConnectedSocket() client: Socket): void {
-      // Aquí puedes manejar la recepción de mensajes del cliente
-      console.log(`Message from ${client.data.user}: ${message}`);
+    @SubscribeMessage('joinThread')
+    handleJoinThread(@MessageBody() threadId: string, @ConnectedSocket() client: Socket) {
+      client.join(threadId);
+      console.log(`Client ${client.id} joined thread ${threadId}`);
     }
-  
-    sendMessageToClient(userId: string, message: string) {
-      this.server.to(userId).emit('newMessage', message);
+
+    sendMessage(threadId: string, message: any) {
+      this.server.to(threadId).emit('newMessage', message);
     }
   }
   

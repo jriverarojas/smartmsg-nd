@@ -38,4 +38,7 @@ export class Message {
 
   @Column()
   threadId: number;
+
+  @Column({ nullable: true })
+  refId?: string;
 }

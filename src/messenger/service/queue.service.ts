@@ -7,6 +7,7 @@ import { Function } from '../entities/function.entity';
 import { WaapiService } from './waapi.service';
 import { FunctionService } from './function.service';
 import { EncryptionService } from '../../auth/service/encryption.service';
+import { WebService } from './web.service';
 
 @Injectable()
 export class QueueService {
@@ -17,6 +18,7 @@ export class QueueService {
     private readonly encryptionService: EncryptionService,
     private readonly waapiService: WaapiService,
     private readonly functionService: FunctionService,
+    private readonly webService: WebService,
   ) {}
 
 
@@ -73,6 +75,9 @@ export class QueueService {
     switch (serviceName) {
       case 'waapi':
         await this.waapiService.execute(configOrFunction, taskPayload);
+        break;
+      case 'web':
+        await this.webService.execute(configOrFunction, taskPayload);
         break;
       case 'function':
         console.log('FUNCTION!!!!');
