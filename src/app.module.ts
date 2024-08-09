@@ -9,7 +9,6 @@ import { AuthModule } from './auth/auth.module'
 import { MessengerModule } from './messenger/messenger.module'
 import { TransactionInterceptor } from './common/transaction.decorator';
 import { LoggingInterceptor } from './common/interceptos/logging.interceptor';
-import { WebsocketGateway } from './websocket.gateway';
 
 @Module({
   imports: [
@@ -41,7 +40,6 @@ import { WebsocketGateway } from './websocket.gateway';
   controllers: [AppController],
   providers: [
     AppService,
-    WebsocketGateway,
     {
       provide: APP_INTERCEPTOR,
       useClass: TransactionInterceptor,

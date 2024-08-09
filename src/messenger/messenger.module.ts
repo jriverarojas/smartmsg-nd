@@ -35,6 +35,7 @@ import { FunctionService } from './service/function.service';
 import { FunctionCall } from './entities/functioncall.entity';
 import { FunctionController } from './controller/function.controller';
 import { WebService } from './service/web.service';
+import { WebsocketGateway } from './websocket.gateway';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { WebService } from './service/web.service';
     OpenaiService,
     FunctionService,
     WebService,
+    WebsocketGateway,
   ],
 })
 export class MessengerModule {}

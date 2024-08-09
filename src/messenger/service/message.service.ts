@@ -6,7 +6,7 @@ import { CreateMessageDto } from '../dto/create-message.dto';
 import { UpdateMessageDto } from '../dto/update-message.dto';
 import { AssistantService } from './assistant.service';
 import { ThreadService } from './thread.service';
-import { WebsocketGateway } from 'src/websocket.gateway';
+import { WebsocketGateway } from 'src/messenger/websocket.gateway';
 
 @Injectable()
 export class MessageService {
