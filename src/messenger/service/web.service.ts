@@ -132,18 +132,18 @@ export class WebService {
         await queryRunner.manager.save(thread);
         if (assistant.isAutomatic) {
           if (isNewThread) {
-            automaticRes = await this.automaticService.initConversation(assistant, 'web', instance.id, taskPayload.data.message.body, taskPayload.toFrom);
+            automaticRes = await this.automaticService.initConversation(assistant, 'web', instance.id, taskPayload.message, taskPayload.toFrom);
             thread.externalId = automaticRes.threadId;
             await queryRunner.manager.save(thread);
           } else {
-            automaticRes = await this.automaticService.createMessage(assistant, 'web', instance.id, thread.externalId, taskPayload.data.message.body, taskPayload.toFrom);
+            automaticRes = await this.automaticService.createMessage(assistant, 'web', instance.id, thread.externalId, taskPayload.message, taskPayload.toFrom);
           }
         }
       }
 
       const message = queryRunner.manager.create(Message, {
         thread,
-        message: taskPayload.data.message.body,
+        message: taskPayload.message,
         dateCreated: new Date(),
         status: 'done',
         queueId: taskPayload.id,
