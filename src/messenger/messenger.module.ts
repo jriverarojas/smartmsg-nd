@@ -34,6 +34,7 @@ import { OpenaiService } from './service/openai.service';
 import { FunctionService } from './service/function.service';
 import { FunctionCall } from './entities/functioncall.entity';
 import { FunctionController } from './controller/function.controller';
+import { WebService } from './service/web.service';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { FunctionController } from './controller/function.controller';
     AutomaticService,
     OpenaiService,
     FunctionService,
+    WebService,
   ],
 })
 export class MessengerModule {}
