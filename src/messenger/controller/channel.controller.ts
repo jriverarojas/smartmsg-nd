@@ -18,8 +18,8 @@ export class ChannelController {
   }
 
   @Get()
-  @Permissions('listChannel')
   findAll(): Promise<Channel[]> {
+    console.log('mi log');
     return this.channelService.findAll();
   }
 
