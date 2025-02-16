@@ -26,7 +26,7 @@ import { LoggingInterceptor } from './common/interceptos/logging.interceptor';
         database: configService.get('DATABASE_NAME'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
-        logging:false,
+        logging:configService.get('DATABASE_LOGGING'),
         timezone: 'Z', // This forces UTC
         ssl: {
           rejectUnauthorized: false,

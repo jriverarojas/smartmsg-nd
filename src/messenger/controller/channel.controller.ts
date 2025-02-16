@@ -19,12 +19,10 @@ export class ChannelController {
 
   @Get()
   findAll(): Promise<Channel[]> {
-    console.log('mi log');
     return this.channelService.findAll();
   }
 
   @Get(':id')
-  @Permissions('listChannel')
   findOne(@Param('id') id: number): Promise<Channel> {
     return this.channelService.findOne(+id);
   }

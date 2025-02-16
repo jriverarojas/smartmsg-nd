@@ -20,7 +20,6 @@ export class UserController {
   }
 
   @Post('create-api-user')
-  @Permissions('createUser')
   createApiUser(@Body() createUserDto: any): Promise<any> {
     const userDto = { ...createUserDto, isApiUser: true };
     return this.userService.create(userDto);

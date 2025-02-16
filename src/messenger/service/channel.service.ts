@@ -27,6 +27,7 @@ export class ChannelService {
 
   async findOne(id: number): Promise<Channel> {
     const channel = await this.channelRepository.findOne({ where: { id } });
+    channel.config = this.encryptionService.decrypt(channel.config);
     if (!channel) {
       throw new NotFoundException(`Channel with ID ${id} not found`);
     }
