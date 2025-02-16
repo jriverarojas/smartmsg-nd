@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
 import { ValidationPipe, BadRequestException } from '@nestjs/common';
@@ -8,6 +7,8 @@ import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.int
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  //DTOS validation
 
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
@@ -32,7 +33,7 @@ async function bootstrap() {
   // Use global exception filter
   app.useGlobalFilters(new AllExceptionsFilter());
   
-  const redisHost = configService.get<string>('REDIS_HOST');
+  /*const redisHost = configService.get<string>('REDIS_HOST');
   const redisPort = configService.get<number>('REDIS_PORT');
   const redisPassword = configService.get<string>('REDIS_PASSWORD')
   app.connectMicroservice<MicroserviceOptions>({
@@ -44,7 +45,7 @@ async function bootstrap() {
     },
   });
 
-  await app.startAllMicroservices();
+  await app.startAllMicroservices();*/
   
   const corsOptions: CorsOptions = {
     origin: ['http://localhost:9000'],

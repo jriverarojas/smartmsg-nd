@@ -1,132 +1,161 @@
+
 @startuml
 
 entity Log {
-  * id: number (PK)
-  --
-  method: string
-  url: string
-  body: json
-  status: number
-  duration: number
-  createdAt: Date
-}
-
-entity User {
-  * id: number (PK)
-  --
-  name: string
-  email: string
-  password: string
-  isApiUser: boolean
-  active: boolean
-  apiKey: string
-  apiKeyLastDigits: string
-  apiKeyExpiration: Date
-}
-
-entity Role {
-  * id: number (PK)
-  --
-  name: string
+    id : number
+    method : string
+    url : string
+    status : number
+    duration : number
+    createdAt : Date
 }
 
 entity Permission {
-  * id: number (PK)
-  --
-  name: string
+    id : number
+    name : string
+}
+
+entity Role {
+    id : number
+    name : string
+}
+
+entity User {
+    id : number
+    name : string
+    email : string
+    password : string
+    isApiUser : boolean
+    active : boolean
+    apiKey : string
+    apiKeyLastDigits : string
+    apiKeyExpiration : Date
 }
 
 entity Assistant {
-  * id: number (PK)
-  --
-  type: string
-  active: boolean
-  working: string
-  userId: number
+    id : number
+    type : string
+    active : boolean
+    isAutomatic : boolean
+    working : string
+    config : string
 }
 
 entity Category {
-  * id: number (PK)
-  --
-  code: string
-  name: string
-  parentId: number
+    id : number
+    code : string
+    name : string
+    parentId : number
 }
 
 entity Channel {
-  * id: number (PK)
-  --
-  code: string
-  service: string
-  config: string
-  expiresIn: number
-  name: string
+    id : number
+    code : string
+    service : string
+    config : string
+    expiresIn : number
+    name : string
+}
+
+entity Function {
+    id : number
+    name : string
+    url : string
+    params : string
+    headers : string
+    sendBodyParams : boolean
+    templateSource : string
+    assistantId : number
+}
+
+entity FunctionCall {
+    id : number
+    params : string
+    response : string
+}
+
+entity InstanceAssistant {
+    id : number
+    isDefault : boolean
+    instanceId : number
+    assistantId : number
 }
 
 entity Instance {
-  * id: number (PK)
-  --
-  number: string
-  externalId: string
-  channelId: number
-  createdAt: Date
-  updatedAt: Date
+    id : number
+    number : string
+    externalId : string
+    createdAt : Date
+    updatedAt : Date
+    channelId : number
 }
 
 entity Message {
-  * id: number (PK)
-  --
-  message: string
-  dateCreated: Date
-  status: string
-  queueId: string
-  type: string
-  assistantId: number
-  threadId: number
+    id : number
+    message : string
+    dateCreated : Date
+    status : string
+    queueId : string
+    type : string
+    threadId : number
 }
 
 entity Queue {
-  * id: number (PK)
-  --
-  payload: any
-  status: string
-  redisId: string
-  errorReason: string
-  createdAt: Date
-  updatedAt: Date
+    id : number
+    payload : any
+    status : string
+    redisId : string
+    errorReason : string
+    createdAt : Date
+    updatedAt : Date
 }
 
 entity Thread {
-  * id: number (PK)
-  --
-  externalInstance: string
-  expirationDate: Date
-  channelId: number
-  categoryId: number
-  instanceId: number
+    id : number
+    externalInstance : string
+    expirationDate : Date
+    instanceId : number
 }
 
-entity UserRole {
-  * userId: number (FK)
-  * roleId: number (FK)
-}
+User --|{ Role : roles
+Role --|{ Permission : permissions
+Role --|{ User : users
+Permission }|--|| Role : roles
 
-entity RolePermission {
-  * roleId: number (FK)
-  * permissionId: number (FK)
-}
+Assistant --|{ Category : categories
+Assistant --|{ Thread : threads
+Assistant --|{ Message : messages
+Assistant --|{ InstanceAssistant : instanceAssistants
+Assistant --|{ Function : functions
 
-User -- UserRole : "userId"  // Muchos a Muchos
-Role -- UserRole : "roleId"  // Muchos a Muchos
-Role -- RolePermission : "roleId"  // Uno a Muchos
-Permission -- RolePermission : "permissionId"  // Uno a Muchos
-Assistant }|--|{ User : "userId"  // Muchos a Uno
-Category }|--|{ Category : "parentId"  // Muchos a Uno (Recursivo)
-Instance }|--|| Channel : "channelId"  // Muchos a Uno
-Message }|--|| Assistant : "assistantId"  // Muchos a Uno
-Message }|--|| Thread : "threadId"  // Muchos a Uno
-Thread }|--|| Channel : "channelId"  // Muchos a Uno
-Thread }|--|| Category : "categoryId"  // Muchos a Uno
-Thread }|--|| Instance : "instanceId"  // Muchos a Uno
+Category --|{ Category : parent
+Category --|{ Category : subcategories
+Category --|{ Assistant : assistants
+Category --|{ Thread : threads
+
+Channel --|{ Thread : threads
+Channel --|{ Instance : instances
+
+Function --|{ Assistant : assistant
+Function --|{ FunctionCall : functionCalls
+
+FunctionCall }|--|| Thread : thread
+
+InstanceAssistant }|--|| Instance : instance
+InstanceAssistant }|--|| Assistant : assistant
+
+Instance --|{ Channel : channel
+Instance --|{ Thread : threads
+Instance --|{ InstanceAssistant : instanceAssistants
+
+Message --|{ Thread : thread
+Message --|{ Assistant : assistant
+
+Thread --|{ Channel : channel
+Thread --|{ Category : category
+Thread --|{ Message : messages
+Thread --|{ Assistant : assistants
+Thread --|{ Instance : instance
+Thread --|{ FunctionCall : functionCalls
 
 @enduml
