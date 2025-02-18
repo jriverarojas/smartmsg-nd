@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import axios from 'axios';
@@ -39,7 +39,13 @@ export class FunctionService {
   }
 
   async findOne(id: number): Promise<Function> {
-    return this.functionRepository.findOneBy({ id });
+    const f = await this.functionRepository.findOneBy({ id });
+    f.url = this.encryptionService.decrypt(f.url);
+    f.headers = this.encryptionService.decrypt(f.headers);
+    if (!f) {
+      throw new NotFoundException(`Function with ID ${id} not found`);
+    }
+    return f;
   }
 
   async update(id: number, updateFunctionDto: UpdateFunctionDto): Promise<Function> {
